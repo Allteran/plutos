@@ -7,14 +7,19 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
+@Document(collection = "salary")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "countries")
-public class Country {
+public class Salary {
     @Id
     private String id;
-    private String name;
-    private String code;
+    private LocalDateTime shiftStart;
+    private LocalDateTime shiftEnd;
+    private int workedHours;
+    private double ratePerHour;
+    private WorkPlace workPlace;
 }
