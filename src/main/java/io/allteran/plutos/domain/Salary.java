@@ -19,7 +19,9 @@ public class Salary {
     private String id;
     private LocalDateTime shiftStart;
     private LocalDateTime shiftEnd;
+    private String reportMonth;
+    private String reportYear;
     private int workedHours;
     private double ratePerHour;
-    private WorkPlace workPlace;
+    private Company company;
 }

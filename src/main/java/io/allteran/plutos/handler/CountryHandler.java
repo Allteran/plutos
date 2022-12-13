@@ -1,13 +1,10 @@
 package io.allteran.plutos.handler;
 
-import com.mongodb.internal.connection.Server;
 import io.allteran.plutos.domain.Country;
 import io.allteran.plutos.dto.CountryDTO;
-import io.allteran.plutos.repo.CountryRepository;
 import io.allteran.plutos.service.CountryService;
 import io.allteran.plutos.util.EntityMapper;
 import lombok.SneakyThrows;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ReactiveHttpOutputMessage;
@@ -18,7 +15,6 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.Sinks;
 
 @Component
 public class CountryHandler {
@@ -37,12 +33,21 @@ public class CountryHandler {
                 .body(body);
     }
 
-    public Mono<ServerResponse> getList(ServerRequest request) {
+    public Mono<ServerResponse> findAll(ServerRequest request) {
         Flux<Country> countryFlux = countryService.findAll();
         Flux<CountryDTO> dtoFlux = countryFlux.map(EntityMapper::convertToDTO);
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromPublisher(dtoFlux, CountryDTO.class));
+    }
+
+    public Mono<ServerResponse> findById(ServerRequest request) {
+        String id = request.pathVariable("id");
+        Mono<CountryDTO> dtoMono = countryService.findById(id);
+        return ServerResponse
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromPublisher(dtoMono, CountryDTO.class));
     }
 
     @SneakyThrows

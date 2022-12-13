@@ -25,9 +25,9 @@ public class CountryService {
         return countryRepo.findAll();
     }
 
-    //FIX TO RETURN COUNTRYDTO
-    public Mono<Country> findById(String id) {
-        return countryRepo.findById(id);
+    public Mono<CountryDTO> findById(String id) {
+        return countryRepo.findById(id)
+                .map(EntityMapper::convertToDTO);
     }
 
     public Mono<CountryDTO> create(Mono<CountryDTO> countryDTOMono) {
