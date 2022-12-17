@@ -2,6 +2,7 @@ package io.allteran.plutos.config;
 
 import io.allteran.plutos.handler.CompanyHandler;
 import io.allteran.plutos.handler.CountryHandler;
+import io.allteran.plutos.handler.PrivilegeHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -39,5 +40,18 @@ public class Router {
                 .andRoute(RequestPredicates.PUT("companies/update/{id}")
                         .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), handler::update)
                 .andRoute(RequestPredicates.DELETE("companies/delete/{id}"), handler::delete);
+    }
+    @Bean
+    public RouterFunction<ServerResponse> privilegeRoute(PrivilegeHandler handler) {
+        return RouterFunctions
+                .route(RequestPredicates.GET("/privileges")
+                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), handler::findAll)
+                .andRoute(RequestPredicates.GET("/privileges/{id}")
+                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), handler::findById)
+                .andRoute(RequestPredicates.POST("/privileges/new")
+                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), handler::create)
+                .andRoute(RequestPredicates.PUT("privileges/update/{id}")
+                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), handler::update)
+                .andRoute(RequestPredicates.DELETE("privileges/delete/{id}"), handler::delete);
     }
 }

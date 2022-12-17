@@ -26,11 +26,11 @@ public class User {
     private String passwordConfirm;
     private String occupation;
     private Country residence;
-    private List<Salary> salaryList;
+    //saves only IDs of some salary, so it won't be inner object in Mongo
+    private List<String> salaryList;
     private float totalSalary;
     private float totalTax;
     private float netPay;
-    private List<Tax> taxList;
     private LocalDate dateOfBirth;
     private Set<Role> roles;
     private Set<Privilege> privileges;
