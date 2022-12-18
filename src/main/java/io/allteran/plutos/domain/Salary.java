@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Document(collection = "salary")
@@ -20,8 +21,6 @@ public class Salary {
     private String userId;
     private LocalDateTime shiftStart;
     private LocalDateTime shiftEnd;
-    private String reportMonth;
-    private String reportYear;
     private double workedHours;
     private double ratePerHour;
     private String companyId;
