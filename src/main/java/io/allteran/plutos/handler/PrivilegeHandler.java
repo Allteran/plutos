@@ -1,6 +1,7 @@
 package io.allteran.plutos.handler;
 
 import io.allteran.plutos.dto.PrivilegeDTO;
+import io.allteran.plutos.exception.NotFoundException;
 import io.allteran.plutos.service.PrivilegeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,7 +33,7 @@ public class PrivilegeHandler {
 
     public Mono<ServerResponse> findById(ServerRequest request) {
         String id = request.pathVariable("id");
-        Mono<PrivilegeDTO> dto = privilegeService.findById(id);
+        Mono<PrivilegeDTO> dto = privilegeService.findById(id).switchIfEmpty(Mono.error(new NotFoundException("Can't find Privilege with ID [" + id + "]")));
 
         return ServerResponse
                 .ok()
@@ -53,7 +54,7 @@ public class PrivilegeHandler {
     public Mono<ServerResponse> update(ServerRequest request) {
         String idFromDb = request.pathVariable("id");
         Mono<PrivilegeDTO> body = request.bodyToMono(PrivilegeDTO.class);
-        Mono<PrivilegeDTO> updatedPrivilegeDTO = privilegeService.update(body, idFromDb);
+        Mono<PrivilegeDTO> updatedPrivilegeDTO = privilegeService.update(body, idFromDb).switchIfEmpty(Mono.error(new NotFoundException("Can't find Privilege with ID [" + idFromDb + "]")));
 
         return ServerResponse
                 .ok()
@@ -63,7 +64,7 @@ public class PrivilegeHandler {
 
     public Mono<ServerResponse> delete(ServerRequest request) {
         String id = request.pathVariable("id");
-        Mono<Void> deletationMono = privilegeService.delete(id);
+        Mono<Void> deletationMono = privilegeService.delete(id).switchIfEmpty(Mono.error(new NotFoundException("Can't find Privilege with ID [" + id + "]")));
 
         return ServerResponse
                 .ok()

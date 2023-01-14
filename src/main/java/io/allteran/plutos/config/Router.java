@@ -1,14 +1,12 @@
 package io.allteran.plutos.config;
 
+import io.allteran.plutos.domain.AuthHandler;
 import io.allteran.plutos.domain.Country;
 import io.allteran.plutos.dto.CompanyDTO;
 import io.allteran.plutos.dto.CountryDTO;
 import io.allteran.plutos.dto.PrivilegeDTO;
 import io.allteran.plutos.dto.SalaryDTO;
-import io.allteran.plutos.handler.CompanyHandler;
-import io.allteran.plutos.handler.CountryHandler;
-import io.allteran.plutos.handler.PrivilegeHandler;
-import io.allteran.plutos.handler.SalaryHandler;
+import io.allteran.plutos.handler.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -806,6 +804,26 @@ public class Router {
                         .POST("/new", accept(APPLICATION_JSON), handler::create)
                         .PUT("/update/{id}", accept(APPLICATION_JSON), handler::update)
                         .DELETE("/delete/{id}", accept(APPLICATION_JSON), handler::delete))
+                .build();
+        return router;
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> userRoute(UserHandler handler) {
+        RouterFunction<ServerResponse> router = RouterFunctions
+                .route()
+                .path("/route/user", builder -> builder
+                        .POST("/test-admin", accept(APPLICATION_JSON), handler::createAdmin))
+                .build();
+        return router;
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> authRoute(AuthHandler handler) {
+        RouterFunction<ServerResponse> router = RouterFunctions
+                .route()
+                .path("/auth", builder -> builder
+                        .POST("/login", accept(APPLICATION_JSON), handler::login))
                 .build();
         return router;
     }

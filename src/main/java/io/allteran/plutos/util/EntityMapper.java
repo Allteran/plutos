@@ -1,13 +1,7 @@
 package io.allteran.plutos.util;
 
-import io.allteran.plutos.domain.Company;
-import io.allteran.plutos.domain.Country;
-import io.allteran.plutos.domain.Privilege;
-import io.allteran.plutos.domain.Salary;
-import io.allteran.plutos.dto.CompanyDTO;
-import io.allteran.plutos.dto.CountryDTO;
-import io.allteran.plutos.dto.PrivilegeDTO;
-import io.allteran.plutos.dto.SalaryDTO;
+import io.allteran.plutos.domain.*;
+import io.allteran.plutos.dto.*;
 import org.springframework.beans.BeanUtils;
 
 public class EntityMapper {
@@ -55,5 +49,17 @@ public class EntityMapper {
         Salary s = new Salary();
         BeanUtils.copyProperties(dto, s);
         return s;
+    }
+
+    public static UserDTO convertToDTO(User u) {
+        UserDTO dto = new UserDTO();
+        BeanUtils.copyProperties(u, dto);
+        return dto;
+    }
+
+    public static User convertToEntity(UserDTO dto) {
+        User u = new User();
+        BeanUtils.copyProperties(u, dto);
+        return u;
     }
 }

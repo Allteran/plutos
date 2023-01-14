@@ -1,6 +1,7 @@
 package io.allteran.plutos.handler;
 
 import io.allteran.plutos.dto.CompanyDTO;
+import io.allteran.plutos.exception.NotFoundException;
 import io.allteran.plutos.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,7 +31,7 @@ public class CompanyHandler {
 
     public Mono<ServerResponse> findById(ServerRequest request) {
         String id = request.pathVariable("id");
-        Mono<CompanyDTO> companyDTOMono = companyService.findById(id);
+        Mono<CompanyDTO> companyDTOMono = companyService.findById(id).switchIfEmpty(Mono.error(new NotFoundException("Can't find company with ID [" + id + "]")));
 
         return ServerResponse
                 .ok()
@@ -51,7 +52,7 @@ public class CompanyHandler {
     public Mono<ServerResponse> update(ServerRequest request) {
         String idFromDb = request.pathVariable("id");
         Mono<CompanyDTO> companyDTOMono = request.bodyToMono(CompanyDTO.class);
-        Mono<CompanyDTO> updatedDTOMono = companyService.update(companyDTOMono, idFromDb);
+        Mono<CompanyDTO> updatedDTOMono = companyService.update(companyDTOMono, idFromDb).switchIfEmpty(Mono.error(new NotFoundException("Can't find company with ID [" + idFromDb + "]")));
 
         return ServerResponse
                 .ok()
@@ -61,7 +62,7 @@ public class CompanyHandler {
 
     public Mono<ServerResponse> delete(ServerRequest request) {
         String id = request.pathVariable("id");
-        Mono<Void> deletationMono = companyService.delete(id);
+        Mono<Void> deletationMono = companyService.delete(id).switchIfEmpty(Mono.error(new NotFoundException("Can't find company with ID [" + id + "]")));
 
         return ServerResponse
                 .ok()

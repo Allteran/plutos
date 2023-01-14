@@ -2,6 +2,7 @@ package io.allteran.plutos.handler;
 
 import io.allteran.plutos.domain.Country;
 import io.allteran.plutos.dto.CountryDTO;
+import io.allteran.plutos.exception.NotFoundException;
 import io.allteran.plutos.service.CountryService;
 import io.allteran.plutos.util.EntityMapper;
 import lombok.SneakyThrows;
@@ -43,7 +44,7 @@ public class CountryHandler {
 
     public Mono<ServerResponse> findById(ServerRequest request) {
         String id = request.pathVariable("id");
-        Mono<CountryDTO> dtoMono = countryService.findById(id);
+        Mono<CountryDTO> dtoMono = countryService.findById(id).switchIfEmpty(Mono.error(new NotFoundException("Can't find Country with ID [" +  id +"]")));
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -64,7 +65,7 @@ public class CountryHandler {
     public Mono<ServerResponse> update(ServerRequest request) {
         String idFromDb = request.pathVariable("id");
         Mono<CountryDTO> monoDTO = request.bodyToMono(CountryDTO.class);
-        Mono<CountryDTO> updatedMonoDTO = countryService.update(monoDTO, idFromDb);
+        Mono<CountryDTO> updatedMonoDTO = countryService.update(monoDTO, idFromDb).switchIfEmpty(Mono.error(new NotFoundException("Can't find country with ID [" + idFromDb + "]")));
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +74,7 @@ public class CountryHandler {
 
     public Mono<ServerResponse> delete(ServerRequest request) {
         String id = request.pathVariable("id");
-        Mono<Void> deletationMono = countryService.delete(id);
+        Mono<Void> deletationMono = countryService.delete(id).switchIfEmpty(Mono.error(new NotFoundException("Can't find Country with ID [" + id + "]")));
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)

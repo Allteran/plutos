@@ -1,6 +1,7 @@
 package io.allteran.plutos.handler;
 
 import io.allteran.plutos.dto.SalaryDTO;
+import io.allteran.plutos.exception.NotFoundException;
 import io.allteran.plutos.service.SalaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -33,7 +34,7 @@ public class SalaryHandler {
 
     public Mono<ServerResponse> findById(ServerRequest request) {
         String id = request.pathVariable("id");
-        Mono<SalaryDTO> findByIdMono = salaryService.findById(id);
+        Mono<SalaryDTO> findByIdMono = salaryService.findById(id).switchIfEmpty(Mono.error(new NotFoundException("Can't find Salary with ID [" + id + "]")));
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -102,15 +103,6 @@ public class SalaryHandler {
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(deletetionMono, Void.class);
-    }
-
-    public Mono<ServerResponse> createTestSalary(ServerRequest request) {
-        Mono<SalaryDTO> fakeDTO = Mono.just(new SalaryDTO("testUserId", LocalDateTime.of(2022, 11,1,7,45), LocalDateTime.of(2022, 11, 1, 19, 45), 12, 16.5, "6398ebec79d5714c70b70df9"));
-        Mono<SalaryDTO> created = salaryService.create(fakeDTO);
-        return ServerResponse
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(created, SalaryDTO.class);
     }
 
 }
