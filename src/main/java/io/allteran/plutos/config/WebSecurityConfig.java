@@ -2,6 +2,7 @@ package io.allteran.plutos.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -49,9 +50,8 @@ public class WebSecurityConfig {
                 .authenticationManager(authenticationManager)
                 .securityContextRepository(securityContextRepository)
                 .authorizeExchange()
-                .pathMatchers("/", "/auth/login", "/favicon.ico").permitAll()
-                //TODO: DO NOT PATH BASED ON USER ROLE
-                .pathMatchers("/router/salary").hasRole("ADMIN")
+                .pathMatchers("/auth/login", "/favicon.ico").permitAll()
+                .pathMatchers("/route/salary/**").hasRole("ADMIN")
                 .anyExchange().authenticated()
                 .and()
                 .build();
