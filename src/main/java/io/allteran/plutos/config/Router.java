@@ -1,7 +1,6 @@
 package io.allteran.plutos.config;
 
-import io.allteran.plutos.domain.AuthHandler;
-import io.allteran.plutos.domain.Country;
+import io.allteran.plutos.handler.AuthHandler;
 import io.allteran.plutos.dto.CompanyDTO;
 import io.allteran.plutos.dto.CountryDTO;
 import io.allteran.plutos.dto.PrivilegeDTO;
@@ -154,7 +153,7 @@ public class Router {
                                             )
                                     },
                                     parameters = {
-                                      @Parameter(in = ParameterIn.PATH, name = "id", description = "Country ID")
+                                            @Parameter(in = ParameterIn.PATH, name = "id", description = "Country ID")
                                     },
                                     requestBody = @RequestBody(
                                             content = @Content(schema = @Schema(
@@ -812,8 +811,12 @@ public class Router {
     public RouterFunction<ServerResponse> userRoute(UserHandler handler) {
         RouterFunction<ServerResponse> router = RouterFunctions
                 .route()
-                .path("/route/user", builder -> builder
-                        .POST("/test-admin", accept(APPLICATION_JSON), handler::createAdmin))
+                .path("/route/adm/users", builder -> builder
+                        .GET("/", accept(APPLICATION_JSON), handler::findAll)
+                        .GET("", accept(APPLICATION_JSON), handler::findAll)
+                        .GET("/{id}", accept(APPLICATION_JSON), handler::findById)
+                        .POST("/new", accept(APPLICATION_JSON), handler::create)
+                )
                 .build();
         return router;
     }

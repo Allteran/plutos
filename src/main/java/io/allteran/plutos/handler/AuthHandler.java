@@ -1,6 +1,7 @@
-package io.allteran.plutos.domain;
+package io.allteran.plutos.handler;
 
 import io.allteran.plutos.config.JwtUtil;
+import io.allteran.plutos.domain.User;
 import io.allteran.plutos.dto.AuthRequest;
 import io.allteran.plutos.dto.AuthResponse;
 import io.allteran.plutos.service.UserService;

@@ -4,12 +4,14 @@ import io.allteran.plutos.config.JwtUtil;
 import io.allteran.plutos.domain.Role;
 import io.allteran.plutos.domain.User;
 import io.allteran.plutos.dto.UserDTO;
+import io.allteran.plutos.exception.NotFoundException;
 import io.allteran.plutos.service.UserService;
 import io.allteran.plutos.util.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
@@ -53,5 +55,100 @@ public class UserHandler {
                 .contentType(APPLICATION_JSON)
                 .body(createdAdmin, UserDTO.class);
     }
+
+    public Mono<ServerResponse> findAll(ServerRequest request) {
+        Flux<UserDTO> userList = userService.findAll().map(EntityMapper::convertToDTO);
+        return ServerResponse
+                .ok()
+                .contentType(APPLICATION_JSON)
+                .body(userList, UserDTO.class);
+    }
+
+    public Mono<ServerResponse> findById(ServerRequest request) {
+        String id = request.pathVariable("id");
+        Mono<UserDTO> findByIdMono = userService.findById(id).map(EntityMapper::convertToDTO).switchIfEmpty(
+                Mono.error(new NotFoundException("Can't find USER with ID [" + id + "]")));
+
+        return ServerResponse
+                .ok()
+                .contentType(APPLICATION_JSON)
+                .body(findByIdMono, UserDTO.class);
+    }
+
+    public Mono<ServerResponse> findByEmail(ServerRequest request) {
+        String email = request.queryParam("email").orElse("");
+        Mono<UserDTO> findByEmailMono = userService.findByEmail(email).map(EntityMapper::convertToDTO).switchIfEmpty(
+                Mono.error(new NotFoundException("Can't find USER with Email [" + email + "]")));
+        return ServerResponse
+                .ok()
+                .contentType(APPLICATION_JSON)
+                .body(findByEmailMono, UserDTO.class);
+    }
+
+    public Mono<ServerResponse> findByFirstName(ServerRequest request) {
+        String firstName = request.queryParam("firstName").orElse("");
+        Flux<UserDTO> searchResult = userService.findByFirstName(firstName).map(EntityMapper::convertToDTO).switchIfEmpty(
+                Mono.error(new NotFoundException("Can't find any USER with FIRST NAME [" + firstName + "]"))
+        );
+
+        return ServerResponse
+                .ok()
+                .contentType(APPLICATION_JSON)
+                .body(searchResult, UserDTO.class);
+    }
+
+    public Mono<ServerResponse> findByLastName(ServerRequest request) {
+        String lastName = request.queryParam("lastName").orElse("");
+        Flux<UserDTO> searchResult = userService.findByLastName(lastName).map(EntityMapper::convertToDTO).switchIfEmpty(
+                Mono.error(new NotFoundException("Can't find any USER with LAST NAME [" + lastName + "]"))
+        );
+
+        return ServerResponse
+                .ok()
+                .contentType(APPLICATION_JSON)
+                .body(searchResult, UserDTO.class);
+    }
+
+    public Mono<ServerResponse> findByCountry(ServerRequest request) {
+        String countryId = request.queryParam("countryId").orElse("");
+        Flux<UserDTO> searchResult = userService.findByCountry(countryId).map(EntityMapper::convertToDTO).switchIfEmpty(
+                Mono.error(new NotFoundException("Can't find any USER with COUNTRY ID [" + countryId + "]"))
+        );
+
+        return ServerResponse
+                .ok()
+                .contentType(APPLICATION_JSON)
+                .body(searchResult, UserDTO.class);
+    }
+
+    //POST
+    public Mono<ServerResponse> create(ServerRequest request) {
+        Mono<UserDTO> body = request.bodyToMono(UserDTO.class);
+//        UserDTO defaultUserDTO = createDefaultUser();
+//        User defaultUser = EntityMapper.convertToEntity(defaultUserDTO);
+//        Mono<User> createdUser = userService.create(Mono.just(defaultUser));
+        Mono<UserDTO> createdUserDTO = userService.create(body.map(EntityMapper::convertToEntity)).map(EntityMapper::convertToDTO);
+
+        return ServerResponse
+                .ok()
+                .contentType(APPLICATION_JSON)
+                .body(createdUserDTO, UserDTO.class);
+    }
+
+    private UserDTO createDefaultUser() {
+        UserDTO defaultUserDTO = new UserDTO();
+        defaultUserDTO.setEmail("borodach@gmail.com");
+        defaultUserDTO.setFirstName("Viktor");
+        defaultUserDTO.setLastName("Borodach");
+        defaultUserDTO.setPassword("098098098");
+        defaultUserDTO.setPasswordConfirm("098098098");
+        defaultUserDTO.setCountryId("63962cc46c7b81399b2a340f");
+        defaultUserDTO.setDateOfBirth(LocalDate.of(1999, 1, 1));
+        defaultUserDTO.setRoles(Set.of(Role.ROLE_USER));
+        defaultUserDTO.setPrivilegeIds(Set.of("639dbe1805f529224305be95"));
+        defaultUserDTO.setActive(true);
+        return defaultUserDTO;
+    }
+
 
 }

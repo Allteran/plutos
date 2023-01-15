@@ -1,24 +1,58 @@
 package io.allteran.plutos.service;
 
 import io.allteran.plutos.domain.User;
+import io.allteran.plutos.exception.FieldException;
 import io.allteran.plutos.exception.NotFoundException;
 import io.allteran.plutos.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.awt.dnd.MouseDragGestureRecognizer;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService implements ReactiveUserDetailsService {
     private final UserRepository repository;
+    private final CountryService countryService;
+    private final PrivilegeService privilegeService;
+    private final PasswordEncoder passwordEncoder;
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile(
+            "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @Autowired
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, CountryService countryService, PrivilegeService privilegeService, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.countryService = countryService;
+        this.privilegeService = privilegeService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public Mono<User> create(Mono<User> userMono) {
+        return userMono
+                .flatMap(user -> {
+                    if(user.getPassword().equals(user.getPasswordConfirm())) {
+                        user.setPassword(passwordEncoder.encode(user.getPassword()));
+                        user.setPasswordConfirm("");
+                    } else {
+                        user.setPassword("");
+                        user.setPasswordConfirm("");
+                        return Mono.error(new FieldException("Passwords don't match"));
+                    }
+                    if(!emailValidation(user.getEmail())) {
+                        return Mono.error(new FieldException("Email [" + user.getEmail() + "] doesn't match the requirements. Notice, that email should match email pattern"));
+                    }
+
+                    return countryService.ifExist(user.getCountryId())
+                            .flatMap(exist -> (exist) ? Mono.just(user) : Mono.error(new NotFoundException("Can't save user: Country with ID [" + user.getCountryId() + "] not found in database")));
+                })
+                .flatMap(user -> repository.existsUserByEmail(user.getEmail())
+                        .flatMap(exist -> (exist) ? Mono.error(new FieldException("User with EMAIL [" + user.getEmail() + "] already exist in database")) : repository.save(user)));
     }
 
     public Flux<User> findAll() {
@@ -53,6 +87,11 @@ public class UserService implements ReactiveUserDetailsService {
 
     public Mono<User> createAdmin(Mono<User> user) {
         return user.flatMap(repository::save);
+    }
+
+    private boolean emailValidation(String email) {
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+        return matcher.find();
     }
 
     @Override

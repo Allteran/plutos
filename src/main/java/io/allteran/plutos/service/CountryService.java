@@ -47,4 +47,8 @@ public class CountryService {
     public Mono<Void> delete(String id) {
         return countryRepo.deleteById(id);
     }
+
+    public Mono<Boolean> ifExist(String id) {
+        return countryRepo.existsCountryById(id);
+    }
 }

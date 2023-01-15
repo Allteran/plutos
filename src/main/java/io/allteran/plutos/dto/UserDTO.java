@@ -1,5 +1,6 @@
 package io.allteran.plutos.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.allteran.plutos.domain.Privilege;
 import io.allteran.plutos.domain.Role;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,9 @@ public class UserDTO {
     private String email;
     private String firstName;
     private String lastName;
+//    @JsonIgnore
     private String password;
+//    @JsonIgnore
     private String passwordConfirm;
     private String countryId;
     //saves only IDs of some salary, so it won't be inner object in Mongo

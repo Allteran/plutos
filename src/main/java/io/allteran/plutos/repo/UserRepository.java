@@ -26,4 +26,7 @@ public interface UserRepository extends ReactiveMongoRepository<User, String> {
     @Query("{'countryId': ?0}")
     Flux<User> findByCountry(String countryId);
 
+    Mono<Long> countByEmail(String email);
+    Mono<Boolean> existsUserByEmail(String email);
+
 }

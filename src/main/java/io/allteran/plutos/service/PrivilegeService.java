@@ -26,6 +26,10 @@ public class PrivilegeService {
                 .map(EntityMapper::convertToDTO);
     }
 
+    public Mono<Boolean> ifExists(String id) {
+        return repository.existsPrivilegeById(id);
+    }
+
     public Mono<PrivilegeDTO> create(Mono<PrivilegeDTO> dtoMono) {
         return dtoMono.map(EntityMapper::convertToEntity)
                 .flatMap(repository::save)

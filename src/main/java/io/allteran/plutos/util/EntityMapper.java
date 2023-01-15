@@ -59,7 +59,7 @@ public class EntityMapper {
 
     public static User convertToEntity(UserDTO dto) {
         User u = new User();
-        BeanUtils.copyProperties(u, dto);
+        BeanUtils.copyProperties(dto, u);
         return u;
     }
 }
