@@ -1,10 +1,6 @@
 package io.allteran.plutos.config;
 
-import io.allteran.plutos.handler.AuthHandler;
-import io.allteran.plutos.dto.CompanyDTO;
-import io.allteran.plutos.dto.CountryDTO;
-import io.allteran.plutos.dto.PrivilegeDTO;
-import io.allteran.plutos.dto.SalaryDTO;
+import io.allteran.plutos.dto.*;
 import io.allteran.plutos.handler.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -71,6 +67,14 @@ public class Router {
                                                     content = @Content(schema = @Schema(
                                                             implementation = CountryDTO.class
                                                     ))
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "403",
+                                                    description = "Forbidden: access denied due to access politic"
                                             )
                                     }
                             )
@@ -96,6 +100,14 @@ public class Router {
                                             @ApiResponse(
                                                     responseCode = "404",
                                                     description = "country not found with given ID"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "403",
+                                                    description = "Forbidden: access denied due to access politic"
                                             )
                                     },
                                     parameters = {
@@ -120,6 +132,14 @@ public class Router {
                                                     content = @Content(schema = @Schema(
                                                             implementation = CountryDTO.class
                                                     ))
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "403",
+                                                    description = "Forbidden: access denied due to access politic"
                                             )
                                     },
                                     requestBody = @RequestBody(
@@ -150,6 +170,14 @@ public class Router {
                                             @ApiResponse(
                                                     responseCode = "404",
                                                     description = "Country was not found by given ID"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "403",
+                                                    description = "Forbidden: access denied due to access politic"
                                             )
                                     },
                                     parameters = {
@@ -180,6 +208,14 @@ public class Router {
                                             @ApiResponse(
                                                     responseCode = "404",
                                                     description = "Country was not found by given ID"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "403",
+                                                    description = "Forbidden: access denied due to access politic"
                                             )
                                     },
                                     parameters = {
@@ -221,6 +257,14 @@ public class Router {
                                                     content = @Content(schema = @Schema(
                                                             implementation = CompanyDTO.class
                                                     ))
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "403",
+                                                    description = "Forbidden: access denied due to access politic"
                                             )
                                     }
                             )
@@ -242,6 +286,14 @@ public class Router {
                                                     content = @Content(schema = @Schema(
                                                             implementation = CompanyDTO.class
                                                     ))
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "403",
+                                                    description = "Forbidden: access denied due to access politic"
                                             )
                                     }
                             )
@@ -267,6 +319,14 @@ public class Router {
                                             @ApiResponse(
                                                     responseCode = "404",
                                                     description = "Company not found with given ID"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "403",
+                                                    description = "Forbidden: access denied due to access politic"
                                             )
                                     },
                                     parameters = {
@@ -291,6 +351,14 @@ public class Router {
                                                     content = @Content(schema = @Schema(
                                                             implementation = CompanyDTO.class
                                                     ))
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "403",
+                                                    description = "Forbidden: access denied due to access politic"
                                             )
                                     },
                                     requestBody = @RequestBody(
@@ -321,6 +389,14 @@ public class Router {
                                             @ApiResponse(
                                                     responseCode = "404",
                                                     description = "Company was not found by given ID"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "403",
+                                                    description = "Forbidden: access denied due to access politic"
                                             )
                                     },
                                     parameters = {
@@ -351,6 +427,14 @@ public class Router {
                                             @ApiResponse(
                                                     responseCode = "404",
                                                     description = "Company was not found by given ID"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "403",
+                                                    description = "Forbidden: access denied due to access politic"
                                             )
                                     },
                                     parameters = {
@@ -391,6 +475,14 @@ public class Router {
                                             content = @Content(schema = @Schema(
                                                     implementation = PrivilegeDTO.class
                                             ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             }
                     )
@@ -412,6 +504,14 @@ public class Router {
                                             content = @Content(schema = @Schema(
                                                     implementation = PrivilegeDTO.class
                                             ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             }
                     )
@@ -437,6 +537,14 @@ public class Router {
                                     @ApiResponse(
                                             responseCode = "404",
                                             description = "Privilege was not found by given ID"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             },
                             parameters = {
@@ -465,6 +573,14 @@ public class Router {
                                     @ApiResponse(
                                             responseCode = "404",
                                             description = "Privilege was not found by given ID"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             },
                             requestBody = @RequestBody(
@@ -495,6 +611,14 @@ public class Router {
                                     @ApiResponse(
                                             responseCode = "404",
                                             description = "Privilege was not found by given ID"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             },
                             parameters = {
@@ -520,6 +644,14 @@ public class Router {
                                     @ApiResponse(
                                             responseCode = "404",
                                             description = "Privilege was not found by given ID"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             },
                             parameters = {
@@ -561,6 +693,14 @@ public class Router {
                                             content = @Content(schema = @Schema(
                                                     implementation = SalaryDTO.class
                                             ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             }
                     )
@@ -582,6 +722,14 @@ public class Router {
                                             content = @Content(schema = @Schema(
                                                     implementation = SalaryDTO.class
                                             ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             }
                     )
@@ -607,6 +755,14 @@ public class Router {
                                     @ApiResponse(
                                             responseCode = "404",
                                             description = "Can't find Salary with given ID"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             },
                             parameters = {
@@ -636,6 +792,14 @@ public class Router {
                                     @ApiResponse(
                                             responseCode = "404",
                                             description = "Can't find Salary with given UserID"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             },
                             parameters = {
@@ -664,6 +828,14 @@ public class Router {
                                     ),
                                     @ApiResponse(
                                             responseCode = "404"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             },
                             parameters = {
@@ -692,6 +864,14 @@ public class Router {
                                             content = @Content(schema = @Schema(
                                                     implementation = SalaryDTO.class
                                             ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             },
                             parameters = {
@@ -719,6 +899,14 @@ public class Router {
                                             content = @Content(schema = @Schema(
                                                     implementation = SalaryDTO.class
                                             ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             },
                             requestBody = @RequestBody(
@@ -750,6 +938,14 @@ public class Router {
                                     @ApiResponse(
                                             responseCode = "404",
                                             description = "Can't find Salary with given ID"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             },
                             parameters = {
@@ -781,6 +977,14 @@ public class Router {
                                     @ApiResponse(
                                             responseCode = "404",
                                             description = "Can't find Salary to delete with given ID"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
                                     )
                             },
                             parameters = {
@@ -806,7 +1010,262 @@ public class Router {
                 .build();
         return router;
     }
-
+    @RouterOperations({
+            @RouterOperation(
+                    path = "/route/adm/users",
+                    produces = {
+                            APPLICATION_JSON_VALUE
+                    },
+                    method = RequestMethod.GET,
+                    beanClass = UserHandler.class,
+                    beanMethod = "findAll",
+                    operation = @Operation(
+                            operationId = "findAllUsers",
+                            description = "SPECIAL PERMISSIONS REQUIRED! Find list of all Users",
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "successful operation",
+                                            content = @Content(schema = @Schema(
+                                                    implementation = UserDTO.class
+                                            ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
+                                    )
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/route/adm/users/{id}",
+                    produces = {
+                            APPLICATION_JSON_VALUE
+                    },
+                    method = RequestMethod.GET,
+                    beanClass = UserHandler.class,
+                    beanMethod = "findById",
+                    operation = @Operation(
+                            operationId = "findUserById",
+                            description = "SPECIAL PERMISSIONS REQUIRED! Find one USER based on given User ID",
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "successful operation",
+                                            content = @Content(schema = @Schema(
+                                                    implementation = UserDTO.class
+                                            ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "404",
+                                            description = "Can't find USER with given ID"
+                                    )
+                            },
+                            parameters = {
+                                    @Parameter(in = ParameterIn.PATH, name = "id", description = "User ID")
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/route/adm/users/search/email",
+                    produces = {
+                            APPLICATION_JSON_VALUE
+                    },
+                    method = RequestMethod.GET,
+                    beanClass = UserHandler.class,
+                    beanMethod = "findByEmail",
+                    operation = @Operation(
+                            operationId = "findUserByEmail",
+                            description = "SPECIAL PERMISSIONS REQUIRED! Find one USER based on given email",
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "successful operation",
+                                            content = @Content(schema = @Schema(
+                                                    implementation = UserDTO.class
+                                            ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "404",
+                                            description = "Can't find USER with given EMAIL"
+                                    )
+                            },
+                            parameters = {
+                                    @Parameter(in = ParameterIn.QUERY, name = "email", description = "User EMAIL (unique)")
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/route/adm/users/search/fname",
+                    produces = {
+                            APPLICATION_JSON_VALUE
+                    },
+                    method = RequestMethod.GET,
+                    beanClass = UserHandler.class,
+                    beanMethod = "findByFirstName",
+                    operation = @Operation(
+                            operationId = "findUserByFirstName",
+                            description = "SPECIAL PERMISSION REQUIRED! Find list of USERS based on given FIRST NAME",
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "successful operation",
+                                            content = @Content(schema = @Schema(
+                                                    implementation = UserDTO.class
+                                            ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "404",
+                                            description = "Can't find any User with given FIRST NAME"
+                                    )
+                            },
+                            parameters = {
+                                    @Parameter(in = ParameterIn.QUERY, name = "firstName", description = "User FIRST NAME")
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/route/adm/users/lname",
+                    produces = {
+                            APPLICATION_JSON_VALUE
+                    },
+                    method = RequestMethod.GET,
+                    beanClass = UserHandler.class,
+                    beanMethod = "findByLastName",
+                    operation = @Operation(
+                            operationId = "findUsersByLastName",
+                            description = "SPECIAL PERMISSION REQUIRED! Find list of Users based on given LAST NAME",
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "successful operation",
+                                            content = @Content(schema = @Schema(
+                                                    implementation = UserDTO.class
+                                            ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "404",
+                                            description = "Can't find any User with given LAST NAME"
+                                    )
+                            },
+                            parameters = {
+                                    @Parameter(in = ParameterIn.QUERY, name = "lastName", description = "User LAST NAME")
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/route/adm/users/search/country",
+                    produces = {
+                            APPLICATION_JSON_VALUE
+                    },
+                    method = RequestMethod.GET,
+                    beanClass = UserHandler.class,
+                    beanMethod = "findByCountry",
+                    operation = @Operation(
+                            operationId = "findUsersByCountry",
+                            description = "SPECIAL PERMISSIONS REQUIRED! Find list of Users with given COUNTRY ID",
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "successful operation",
+                                            content = @Content(schema = @Schema(
+                                                    implementation = UserDTO.class
+                                            ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "404",
+                                            description = "Can't find any User with given COUNTRY ID"
+                                    )
+                            },
+                            parameters = {
+                                    @Parameter(in = ParameterIn.QUERY, name = "countryId", description = "Country ID for User")
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/route/adm/users/new",
+                    produces = {
+                            APPLICATION_JSON_VALUE
+                    },
+                    method = RequestMethod.POST,
+                    beanClass = UserHandler.class,
+                    beanMethod = "create",
+                    operation = @Operation(
+                            operationId = "createNewUser",
+                            description = "SPECIAL PERMISSIONS REQUIRED! Creates new User matched to UserDTO",
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "successful operation",
+                                            content = @Content(schema = @Schema(
+                                                    implementation = UserDTO.class
+                                            ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "400",
+                                            description = "Internal error: can't create USER due to an error. Please, check all the fields"
+                                    )
+                            },
+                            requestBody = @RequestBody(
+                                    content = @Content(schema = @Schema(
+                                            implementation = UserDTO.class
+                                    ))
+                            )
+                    )
+            )
+    })
     @Bean
     public RouterFunction<ServerResponse> userRoute(UserHandler handler) {
         RouterFunction<ServerResponse> router = RouterFunctions
@@ -816,6 +1275,10 @@ public class Router {
                         .GET("", accept(APPLICATION_JSON), handler::findAll)
                         .GET("/{id}", accept(APPLICATION_JSON), handler::findById)
                         .POST("/new", accept(APPLICATION_JSON), handler::create)
+                        .GET("/search/email", accept(APPLICATION_JSON), handler::findByEmail)
+                        .GET("/search/fname", accept(APPLICATION_JSON), handler::findByFirstName)
+                        .GET("/search/lname", accept(APPLICATION_JSON), handler::findByLastName)
+                        .GET("/search/country", accept(APPLICATION_JSON), handler::findByCountry)
                 )
                 .build();
         return router;

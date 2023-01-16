@@ -51,6 +51,7 @@ public class UserService implements ReactiveUserDetailsService {
                     return countryService.ifExist(user.getCountryId())
                             .flatMap(exist -> (exist) ? Mono.just(user) : Mono.error(new NotFoundException("Can't save user: Country with ID [" + user.getCountryId() + "] not found in database")));
                 })
+                //TODO IN FUTURE: validate privilege check when create user
                 .flatMap(user -> repository.existsUserByEmail(user.getEmail())
                         .flatMap(exist -> (exist) ? Mono.error(new FieldException("User with EMAIL [" + user.getEmail() + "] already exist in database")) : repository.save(user)));
     }

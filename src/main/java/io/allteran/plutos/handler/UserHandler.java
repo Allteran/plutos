@@ -4,10 +4,12 @@ import io.allteran.plutos.config.JwtUtil;
 import io.allteran.plutos.domain.Role;
 import io.allteran.plutos.domain.User;
 import io.allteran.plutos.dto.UserDTO;
+import io.allteran.plutos.dto.Views;
 import io.allteran.plutos.exception.NotFoundException;
 import io.allteran.plutos.service.UserService;
 import io.allteran.plutos.util.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.codec.json.Jackson2CodecSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -60,6 +62,7 @@ public class UserHandler {
         Flux<UserDTO> userList = userService.findAll().map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
+                .hint(Jackson2CodecSupport.JSON_VIEW_HINT, Views.Public.class)
                 .contentType(APPLICATION_JSON)
                 .body(userList, UserDTO.class);
     }
@@ -71,6 +74,7 @@ public class UserHandler {
 
         return ServerResponse
                 .ok()
+                .hint(Jackson2CodecSupport.JSON_VIEW_HINT, Views.Public.class)
                 .contentType(APPLICATION_JSON)
                 .body(findByIdMono, UserDTO.class);
     }
@@ -81,6 +85,7 @@ public class UserHandler {
                 Mono.error(new NotFoundException("Can't find USER with Email [" + email + "]")));
         return ServerResponse
                 .ok()
+                .hint(Jackson2CodecSupport.JSON_VIEW_HINT, Views.Public.class)
                 .contentType(APPLICATION_JSON)
                 .body(findByEmailMono, UserDTO.class);
     }
@@ -93,6 +98,7 @@ public class UserHandler {
 
         return ServerResponse
                 .ok()
+                .hint(Jackson2CodecSupport.JSON_VIEW_HINT, Views.Public.class)
                 .contentType(APPLICATION_JSON)
                 .body(searchResult, UserDTO.class);
     }
@@ -105,6 +111,7 @@ public class UserHandler {
 
         return ServerResponse
                 .ok()
+                .hint(Jackson2CodecSupport.JSON_VIEW_HINT, Views.Public.class)
                 .contentType(APPLICATION_JSON)
                 .body(searchResult, UserDTO.class);
     }
@@ -117,38 +124,20 @@ public class UserHandler {
 
         return ServerResponse
                 .ok()
+                .hint(Jackson2CodecSupport.JSON_VIEW_HINT, Views.Public.class)
                 .contentType(APPLICATION_JSON)
                 .body(searchResult, UserDTO.class);
     }
 
-    //POST
     public Mono<ServerResponse> create(ServerRequest request) {
         Mono<UserDTO> body = request.bodyToMono(UserDTO.class);
-//        UserDTO defaultUserDTO = createDefaultUser();
-//        User defaultUser = EntityMapper.convertToEntity(defaultUserDTO);
-//        Mono<User> createdUser = userService.create(Mono.just(defaultUser));
         Mono<UserDTO> createdUserDTO = userService.create(body.map(EntityMapper::convertToEntity)).map(EntityMapper::convertToDTO);
 
         return ServerResponse
                 .ok()
+                .hint(Jackson2CodecSupport.JSON_VIEW_HINT, Views.Public.class)
                 .contentType(APPLICATION_JSON)
                 .body(createdUserDTO, UserDTO.class);
     }
-
-    private UserDTO createDefaultUser() {
-        UserDTO defaultUserDTO = new UserDTO();
-        defaultUserDTO.setEmail("borodach@gmail.com");
-        defaultUserDTO.setFirstName("Viktor");
-        defaultUserDTO.setLastName("Borodach");
-        defaultUserDTO.setPassword("098098098");
-        defaultUserDTO.setPasswordConfirm("098098098");
-        defaultUserDTO.setCountryId("63962cc46c7b81399b2a340f");
-        defaultUserDTO.setDateOfBirth(LocalDate.of(1999, 1, 1));
-        defaultUserDTO.setRoles(Set.of(Role.ROLE_USER));
-        defaultUserDTO.setPrivilegeIds(Set.of("639dbe1805f529224305be95"));
-        defaultUserDTO.setActive(true);
-        return defaultUserDTO;
-    }
-
 
 }
