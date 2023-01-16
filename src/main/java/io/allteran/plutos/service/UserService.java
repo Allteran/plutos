@@ -4,6 +4,7 @@ import io.allteran.plutos.domain.User;
 import io.allteran.plutos.exception.FieldException;
 import io.allteran.plutos.exception.NotFoundException;
 import io.allteran.plutos.repo.UserRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,7 +52,27 @@ public class UserService implements ReactiveUserDetailsService {
                     return countryService.ifExist(user.getCountryId())
                             .flatMap(exist -> (exist) ? Mono.just(user) : Mono.error(new NotFoundException("Can't save user: Country with ID [" + user.getCountryId() + "] not found in database")));
                 })
-                //TODO IN FUTURE: validate privilege check when create user
+                //TODO IN THE FUTURE: validate privilege check when create user
+                .flatMap(user -> repository.existsUserByEmail(user.getEmail())
+                        .flatMap(exist -> (exist) ? Mono.error(new FieldException("User with EMAIL [" + user.getEmail() + "] already exist in database")) : repository.save(user)));
+    }
+
+    public Mono<User> update(String idFromDb, Mono<User> userMono) {
+        return userMono
+                .flatMap(user -> repository.findById(idFromDb).flatMap(userFromDb -> {
+                    if (userFromDb == null) {
+                        return Mono.error(new NotFoundException("Can't update User. User with ID [" + idFromDb + "] not found in database"));
+                    }
+                    if(!user.getNewPassword().equals(user.getPasswordConfirm())) {
+                        return Mono.error(new FieldException("Can't update User. Passwords don't match"));
+                    }
+                    BeanUtils.copyProperties(user, userFromDb, "id", "password", "newPassword", "password", "passwordConfirm");
+                    userFromDb.setPassword(passwordEncoder.encode(user.getNewPassword()));
+                    userFromDb.setPasswordConfirm("");
+                    userFromDb.setNewPassword("");
+
+                    return Mono.just(userFromDb);
+                }))
                 .flatMap(user -> repository.existsUserByEmail(user.getEmail())
                         .flatMap(exist -> (exist) ? Mono.error(new FieldException("User with EMAIL [" + user.getEmail() + "] already exist in database")) : repository.save(user)));
     }

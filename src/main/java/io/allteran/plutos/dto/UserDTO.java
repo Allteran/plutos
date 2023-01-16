@@ -31,6 +31,8 @@ public class UserDTO {
 //    @JsonIgnore
     @JsonView(Views.Internal.class)
     private String passwordConfirm;
+    @JsonView(Views.Internal.class)
+    private String newPassword;
     @JsonView(Views.Public.class)
     private String countryId;
     //saves only IDs of some salary, so it won't be inner object in Mongo

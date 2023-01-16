@@ -140,4 +140,17 @@ public class UserHandler {
                 .body(createdUserDTO, UserDTO.class);
     }
 
+    //TODO: test update case with POSTMAN
+    public Mono<ServerResponse> update(ServerRequest request) {
+        Mono<UserDTO> body = request.bodyToMono(UserDTO.class);
+        String idFromDb = request.pathVariable("id");
+        Mono<UserDTO> updatedUser = userService.update(idFromDb, body.map(EntityMapper::convertToEntity)).map(EntityMapper::convertToDTO);
+
+        return ServerResponse
+                .ok()
+                .contentType(APPLICATION_JSON)
+                .hint(Jackson2CodecSupport.JSON_VIEW_HINT, Views.Internal.class)
+                .body(updatedUser, UserDTO.class);
+    }
+
 }

@@ -23,11 +23,11 @@ public class User implements UserDetails {
     private String email;
     private String firstName;
     private String lastName;
-    @JsonIgnore
     private String password;
     @Transient
-    @JsonIgnore
     private String passwordConfirm;
+    @Transient
+    private String newPassword;
     private String countryId;
     //saves only IDs of some salary, so it won't be inner object in Mongo
     private List<String> salaryList;

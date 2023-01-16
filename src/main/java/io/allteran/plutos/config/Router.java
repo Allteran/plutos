@@ -1264,6 +1264,48 @@ public class Router {
                                     ))
                             )
                     )
+            ),
+            @RouterOperation(
+                    path = "/route/adm/users/update",
+                    produces = {
+                            APPLICATION_JSON_VALUE
+                    },
+                    method = RequestMethod.PUT,
+                    beanClass = UserHandler.class,
+                    beanMethod = "update",
+                    operation = @Operation(
+                            operationId = "updateExistingUserForAdmins",
+                            description = "SPECIAL PERMISSION REQUIRED! Updates existing User matched to UserDTO",
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "successful operation",
+                                            content = @Content(schema = @Schema(
+                                                    implementation = UserDTO.class
+                                            ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "400",
+                                            description = "Internal error: can't create USER due to an error. Please, check all the fields"
+                                    )
+                            },
+                            parameters = {
+                                    @Parameter(in = ParameterIn.PATH, name = "id", description = "ID of User to update")
+                            },
+                            requestBody = @RequestBody(
+                                    content = @Content(schema = @Schema(
+                                            implementation = UserDTO.class
+                                    ))
+                            )
+                    )
             )
     })
     @Bean
@@ -1279,6 +1321,7 @@ public class Router {
                         .GET("/search/fname", accept(APPLICATION_JSON), handler::findByFirstName)
                         .GET("/search/lname", accept(APPLICATION_JSON), handler::findByLastName)
                         .GET("/search/country", accept(APPLICATION_JSON), handler::findByCountry)
+                        .PUT("/update/{id}", accept(APPLICATION_JSON), handler::update)
                 )
                 .build();
         return router;
