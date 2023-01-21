@@ -1324,6 +1324,7 @@ public class Router {
                         .GET("/search/country", accept(APPLICATION_JSON), handler::findByCountry)
                         .PUT("/update/{id}", accept(APPLICATION_JSON), handler::update)
                         .PUT("/test/raw/upd/{id}", accept(APPLICATION_JSON), handler::updateUserRaw)
+                        .DELETE("/delete/{id}", accept(APPLICATION_JSON), handler::delete)
                 )
                 .build();
         return router;

@@ -52,7 +52,8 @@ public class AuthHandler {
                 }).switchIfEmpty(
                         ServerResponse
                                 .badRequest()
-                                .body(BodyInserters.fromValue(new AuthResponse(null, null, MESSAGE_AUTH_FAIL)))));
+                                .body(BodyInserters.fromValue(
+                                        new AuthResponse(null, null, MESSAGE_AUTH_FAIL)))));
     }
 
 }

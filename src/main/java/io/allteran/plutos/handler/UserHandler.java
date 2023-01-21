@@ -166,4 +166,14 @@ public class UserHandler {
                 .body(updatedUser, UserDTO.class);
     }
 
+    public Mono<ServerResponse> delete(ServerRequest request) {
+        String id = request.pathVariable("id");
+        Mono<Void> userDeleted = userService.delete(id);
+
+        return ServerResponse
+                .ok()
+                .contentType(APPLICATION_JSON)
+                .body(userDeleted, Void.class);
+    }
+
 }
