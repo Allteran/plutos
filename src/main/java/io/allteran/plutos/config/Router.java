@@ -1302,7 +1302,8 @@ public class Router {
                             },
                             requestBody = @RequestBody(
                                     content = @Content(schema = @Schema(
-                                            implementation = UserDTO.class
+                                            implementation = UserDTO.class,
+                                            description = "RequestBody should match with UserDTO.class, but consider put time value of 'dateOfBirth' field in classic Java form like '2000-01-14T19:30:56.000Z'"
                                     ))
                             )
                     )
@@ -1322,6 +1323,7 @@ public class Router {
                         .GET("/search/lname", accept(APPLICATION_JSON), handler::findByLastName)
                         .GET("/search/country", accept(APPLICATION_JSON), handler::findByCountry)
                         .PUT("/update/{id}", accept(APPLICATION_JSON), handler::update)
+                        .PUT("/test/raw/upd/{id}", accept(APPLICATION_JSON), handler::updateUserRaw)
                 )
                 .build();
         return router;

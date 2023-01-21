@@ -12,4 +12,5 @@ import java.util.Date;
 public class AuthResponse {
     private String login;
     private String token;
+    private String message;
 }

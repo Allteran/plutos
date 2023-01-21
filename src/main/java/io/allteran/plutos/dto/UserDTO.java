@@ -25,10 +25,8 @@ public class UserDTO {
     private String firstName;
     @JsonView(Views.Public.class)
     private String lastName;
-//    @JsonIgnore
     @JsonView(Views.Internal.class)
     private String password;
-//    @JsonIgnore
     @JsonView(Views.Internal.class)
     private String passwordConfirm;
     @JsonView(Views.Internal.class)

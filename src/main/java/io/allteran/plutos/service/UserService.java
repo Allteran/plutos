@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,15 +65,47 @@ public class UserService implements ReactiveUserDetailsService {
                     if(!user.getNewPassword().equals(user.getPasswordConfirm())) {
                         return Mono.error(new FieldException("Can't update User. Passwords don't match"));
                     }
+                    String originalEmail = userFromDb.getEmail();
+
                     BeanUtils.copyProperties(user, userFromDb, "id", "password", "newPassword", "password", "passwordConfirm");
                     userFromDb.setPassword(passwordEncoder.encode(user.getNewPassword()));
                     userFromDb.setPasswordConfirm("");
                     userFromDb.setNewPassword("");
+                    return repository.existsUserByEmail(userFromDb.getEmail())
+                            .flatMap(exist ->  {
+                                if(!originalEmail.equals(userFromDb.getEmail())) {
+                                    if(exist) {
+                                        return Mono.error(new FieldException("User with EMAIL [" + user.getEmail() + "] already exist in database"));
+                                    }
+                                }
+                                return repository.save(userFromDb);
+                            });
+                }));
+    }
 
-                    return Mono.just(userFromDb);
-                }))
-                .flatMap(user -> repository.existsUserByEmail(user.getEmail())
-                        .flatMap(exist -> (exist) ? Mono.error(new FieldException("User with EMAIL [" + user.getEmail() + "] already exist in database")) : repository.save(user)));
+    public Mono<User> updateRaw(String idFromDb, Mono<User> userMono) {
+        return userMono
+                .flatMap(user -> repository.findById(idFromDb).flatMap(userFromDb -> {
+                    if (userFromDb == null) {
+                        return Mono.error(new NotFoundException("Can't update User. User with ID [" + idFromDb + "] not found in database"));
+                    }
+                    String originalEmail = userFromDb.getEmail();
+
+                    BeanUtils.copyProperties(user, userFromDb, "id", "password", "newPassword", "password", "passwordConfirm");
+                    userFromDb.setPassword(passwordEncoder.encode(user.getNewPassword()));
+                    userFromDb.setPasswordConfirm("");
+                    userFromDb.setNewPassword("");
+                    return repository.existsUserByEmail(userFromDb.getEmail())
+                            .flatMap(exist ->  {
+                                if(!originalEmail.equals(userFromDb.getEmail())) {
+                                    if(exist) {
+                                        return Mono.error(new FieldException("User with EMAIL [" + user.getEmail() + "] already exist in database"));
+                                    }
+                                }
+                                return repository.save(userFromDb);
+                            });
+
+                }));
     }
 
     public Flux<User> findAll() {
