@@ -8,4 +8,5 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface CountryRepository extends ReactiveMongoRepository<Country, String> {
     Mono<Boolean> existsCountryById(String id);
+    Mono<Boolean> existsCountryByCode(String code);
 }

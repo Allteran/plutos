@@ -1,6 +1,7 @@
 package io.allteran.plutos.service;
 
 import io.allteran.plutos.domain.User;
+import io.allteran.plutos.exception.DuplicateException;
 import io.allteran.plutos.exception.FieldException;
 import io.allteran.plutos.exception.NotFoundException;
 import io.allteran.plutos.repo.UserRepository;
@@ -75,7 +76,7 @@ public class UserService implements ReactiveUserDetailsService {
                             .flatMap(exist ->  {
                                 if(!originalEmail.equals(userFromDb.getEmail())) {
                                     if(exist) {
-                                        return Mono.error(new FieldException("User with EMAIL [" + user.getEmail() + "] already exist in database"));
+                                        return Mono.error(new DuplicateException("User with EMAIL [" + user.getEmail() + "] already exist in database"));
                                     }
                                 }
                                 return repository.save(userFromDb);
@@ -157,5 +158,9 @@ public class UserService implements ReactiveUserDetailsService {
         return repository.deleteById(id)
                 .doOnNext(unused -> salaryService.findByUser(id)
                         .doOnNext(salaryDTO -> salaryService.delete(salaryDTO.getId())));
+    }
+
+    public Mono<Boolean> existsById(String id) {
+        return repository.existsById(id);
     }
 }

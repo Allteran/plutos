@@ -32,32 +32,7 @@ public class UserHandler {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
-
-    public Mono<ServerResponse> createAdmin(ServerRequest request) {
-        User admin = new User();
-        admin.setEmail("vitalii.prozapas@gmail.com");
-        admin.setFirstName("Admin");
-        admin.setLastName("Admin");
-        admin.setPassword("123123123");
-        admin.setCountryId("63962d83d94c65354d903ca4");
-        admin.setDateOfBirth(LocalDate.of(1994, 3, 25));
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.ROLE_ADMIN);
-        roles.add(Role.ROLE_USER);
-        admin.setRoles(roles);
-        admin.setPrivilegeIds(Set.of("639dbe1805f529224305be95"));
-        admin.setActive(true);
-
-        Mono<User> adminMono = Mono.just(admin);
-
-        Mono<UserDTO> createdAdmin = userService.createAdmin(adminMono)
-                .map(EntityMapper::convertToDTO);
-        return ServerResponse
-                .ok()
-                .contentType(APPLICATION_JSON)
-                .body(createdAdmin, UserDTO.class);
-    }
-
+    
     public Mono<ServerResponse> findAll(ServerRequest request) {
         Flux<UserDTO> userList = userService.findAll().map(EntityMapper::convertToDTO);
         return ServerResponse

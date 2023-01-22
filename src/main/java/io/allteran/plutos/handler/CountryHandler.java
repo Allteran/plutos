@@ -8,9 +8,7 @@ import io.allteran.plutos.util.EntityMapper;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ReactiveHttpOutputMessage;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -26,14 +24,6 @@ public class CountryHandler {
         this.countryService = countryService;
     }
 
-    public Mono<ServerResponse> hello(ServerRequest request) {
-        BodyInserter<String, ReactiveHttpOutputMessage> body = BodyInserters.fromValue("Hello, Spring!");
-        return ServerResponse
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(body);
-    }
-
     public Mono<ServerResponse> findAll(ServerRequest request) {
         Flux<Country> countryFlux = countryService.findAll();
         Flux<CountryDTO> dtoFlux = countryFlux.map(EntityMapper::convertToDTO);
@@ -44,7 +34,8 @@ public class CountryHandler {
 
     public Mono<ServerResponse> findById(ServerRequest request) {
         String id = request.pathVariable("id");
-        Mono<CountryDTO> dtoMono = countryService.findById(id).switchIfEmpty(Mono.error(new NotFoundException("Can't find Country with ID [" +  id +"]")));
+        Mono<CountryDTO> dtoMono = countryService.findById(id).map(EntityMapper::convertToDTO)
+                .switchIfEmpty(Mono.error(new NotFoundException("Can't find Country with ID [" +  id +"]")));
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -54,7 +45,7 @@ public class CountryHandler {
     @SneakyThrows
     public Mono<ServerResponse> create (ServerRequest request) {
         Mono<CountryDTO> body = request.bodyToMono(CountryDTO.class);
-        Mono<CountryDTO> createdCountry = countryService.create(body);
+        Mono<CountryDTO> createdCountry = countryService.create(body.map(EntityMapper::convertToEntity)).map(EntityMapper::convertToDTO);
 
         return ServerResponse
                 .ok()
@@ -65,7 +56,9 @@ public class CountryHandler {
     public Mono<ServerResponse> update(ServerRequest request) {
         String idFromDb = request.pathVariable("id");
         Mono<CountryDTO> monoDTO = request.bodyToMono(CountryDTO.class);
-        Mono<CountryDTO> updatedMonoDTO = countryService.update(monoDTO, idFromDb).switchIfEmpty(Mono.error(new NotFoundException("Can't find country with ID [" + idFromDb + "]")));
+        Mono<CountryDTO> updatedMonoDTO = countryService.update(monoDTO.map(EntityMapper::convertToEntity), idFromDb)
+                .map(EntityMapper::convertToDTO)
+                .switchIfEmpty(Mono.error(new NotFoundException("Can't find country with ID [" + idFromDb + "]")));
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)

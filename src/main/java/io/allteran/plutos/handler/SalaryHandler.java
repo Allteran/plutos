@@ -3,6 +3,7 @@ package io.allteran.plutos.handler;
 import io.allteran.plutos.dto.SalaryDTO;
 import io.allteran.plutos.exception.NotFoundException;
 import io.allteran.plutos.service.SalaryService;
+import io.allteran.plutos.util.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class SalaryHandler {
     }
 
     public Mono<ServerResponse> findAll(ServerRequest request) {
-        Flux<SalaryDTO> salaryList = salaryService.findAll();
+        Flux<SalaryDTO> salaryList = salaryService.findAll().map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -33,7 +34,9 @@ public class SalaryHandler {
 
     public Mono<ServerResponse> findById(ServerRequest request) {
         String id = request.pathVariable("id");
-        Mono<SalaryDTO> findByIdMono = salaryService.findById(id).switchIfEmpty(Mono.error(new NotFoundException("Can't find Salary with ID [" + id + "]")));
+        Mono<SalaryDTO> findByIdMono = salaryService.findById(id)
+                .map(EntityMapper::convertToDTO)
+                .switchIfEmpty(Mono.error(new NotFoundException("Can't find Salary with ID [" + id + "]")));
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -42,7 +45,7 @@ public class SalaryHandler {
 
     public Mono<ServerResponse> findByUser(ServerRequest request) {
         String id = request.queryParam("userId").orElse("");
-        Flux<SalaryDTO> findByUserFlux = salaryService.findByUser(id);
+        Flux<SalaryDTO> findByUserFlux = salaryService.findByUser(id).map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -58,7 +61,7 @@ public class SalaryHandler {
         LocalDateTime timeFrom = LocalDateTime.parse(timeStringFrom, formatter);
         LocalDateTime timeTo = LocalDateTime.parse(timeStringTo, formatter);
 
-        Flux<SalaryDTO> searchResult = salaryService.findByUserAndDate(userId, timeFrom, timeTo);
+        Flux<SalaryDTO> searchResult = salaryService.findByUserAndDate(userId, timeFrom, timeTo).map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +72,7 @@ public class SalaryHandler {
         String userId = request.queryParam("userId").orElse("");
         String companyId = request.queryParam("companyId").orElse("");
 
-        Flux<SalaryDTO> searchResult = salaryService.findByUserAndCompany(userId, companyId);
+        Flux<SalaryDTO> searchResult = salaryService.findByUserAndCompany(userId, companyId).map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +81,8 @@ public class SalaryHandler {
 
     public Mono<ServerResponse> create(ServerRequest request) {
         Mono<SalaryDTO> body = request.bodyToMono(SalaryDTO.class);
-        Mono<SalaryDTO> createdSalaryDTO = salaryService.create(body);
+        Mono<SalaryDTO> createdSalaryDTO = salaryService.create(body.map(EntityMapper::convertToEntity))
+                .map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -88,7 +92,8 @@ public class SalaryHandler {
     public Mono<ServerResponse> update(ServerRequest request) {
         String idFromDb = request.pathVariable("id");
         Mono<SalaryDTO> body = request.bodyToMono(SalaryDTO.class);
-        Mono<SalaryDTO> updatedSalaryDTO = salaryService.update(body, idFromDb);
+        Mono<SalaryDTO> updatedSalaryDTO = salaryService.update(body.map(EntityMapper::convertToEntity), idFromDb)
+                .map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)

@@ -3,6 +3,7 @@ package io.allteran.plutos.handler;
 import io.allteran.plutos.dto.CompanyDTO;
 import io.allteran.plutos.exception.NotFoundException;
 import io.allteran.plutos.service.CompanyService;
+import io.allteran.plutos.util.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class CompanyHandler {
     }
 
     public Mono<ServerResponse> findAll(ServerRequest request) {
-        Flux<CompanyDTO> companyDTOFlux = companyService.findAll();
+        Flux<CompanyDTO> companyDTOFlux = companyService.findAll().map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -31,7 +32,8 @@ public class CompanyHandler {
 
     public Mono<ServerResponse> findById(ServerRequest request) {
         String id = request.pathVariable("id");
-        Mono<CompanyDTO> companyDTOMono = companyService.findById(id).switchIfEmpty(Mono.error(new NotFoundException("Can't find company with ID [" + id + "]")));
+        Mono<CompanyDTO> companyDTOMono = companyService.findById(id).map(EntityMapper::convertToDTO)
+                .switchIfEmpty(Mono.error(new NotFoundException("Can't find company with ID [" + id + "]")));
 
         return ServerResponse
                 .ok()
@@ -41,7 +43,9 @@ public class CompanyHandler {
 
     public Mono<ServerResponse> create(ServerRequest request) {
         Mono<CompanyDTO> body = request.bodyToMono(CompanyDTO.class);
-        Mono<CompanyDTO> createdCompany = companyService.create(body);
+        Mono<CompanyDTO> createdCompany = companyService.create(body.map(EntityMapper::convertToEntity))
+                .map(EntityMapper::convertToDTO);
+
 
         return ServerResponse
                 .ok()
@@ -52,7 +56,8 @@ public class CompanyHandler {
     public Mono<ServerResponse> update(ServerRequest request) {
         String idFromDb = request.pathVariable("id");
         Mono<CompanyDTO> companyDTOMono = request.bodyToMono(CompanyDTO.class);
-        Mono<CompanyDTO> updatedDTOMono = companyService.update(companyDTOMono, idFromDb).switchIfEmpty(Mono.error(new NotFoundException("Can't find company with ID [" + idFromDb + "]")));
+        Mono<CompanyDTO> updatedDTOMono = companyService.update(companyDTOMono.map(EntityMapper::convertToEntity), idFromDb)
+                .map(EntityMapper::convertToDTO).switchIfEmpty(Mono.error(new NotFoundException("Can't find company with ID [" + idFromDb + "]")));
 
         return ServerResponse
                 .ok()
