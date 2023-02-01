@@ -13,16 +13,28 @@ import java.time.LocalDateTime;
 
 @Service
 public class SalaryService {
-    private final SalaryRepository repository;
-    private final CompanyService companyService;
-    private final UserService userService;
+    private SalaryRepository repository;
+    private CompanyService companyService;
+    private UserService userService;
 
-    @Autowired
-    public SalaryService(SalaryRepository repository, CompanyService companyService, UserService userService) {
+    public void setRepository(SalaryRepository repository) {
         this.repository = repository;
+    }
+
+    public void setCompanyService(CompanyService companyService) {
         this.companyService = companyService;
+    }
+
+    public void setUserService(UserService userService) {
         this.userService = userService;
     }
+
+    //    @Autowired
+//    public SalaryService(SalaryRepository repository, CompanyService companyService, UserService userService) {
+//        this.repository = repository;
+//        this.companyService = companyService;
+//        this.userService = userService;
+//    }
 
     public Flux<Salary> findAll() {
         return repository.findAll();

@@ -1,8 +1,5 @@
 package io.allteran.plutos.handler;
 
-import io.allteran.plutos.config.JwtUtil;
-import io.allteran.plutos.domain.Role;
-import io.allteran.plutos.domain.User;
 import io.allteran.plutos.dto.UserDTO;
 import io.allteran.plutos.dto.Views;
 import io.allteran.plutos.exception.NotFoundException;
@@ -16,23 +13,17 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Component
 public class UserHandler {
     private final UserService userService;
-    private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserHandler(UserService userService, JwtUtil jwtUtil) {
+    public UserHandler(UserService userService) {
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
     }
-    
+
     public Mono<ServerResponse> findAll(ServerRequest request) {
         Flux<UserDTO> userList = userService.findAll().map(EntityMapper::convertToDTO);
         return ServerResponse

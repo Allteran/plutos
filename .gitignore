@@ -35,3 +35,26 @@ out/
 
 ### VS Code ###
 .vscode/
+
+## FRONTEND
+# dependencies
+/plutos-frontend/node_modules/
+/plutos-frontend/.pnp
+/plutos-frontend/.pnp.js
+
+# testing
+/plutos-frontend/coverage
+
+# production
+/plutos-frontend//build
+
+# misc
+/plutos-frontend/.DS_Store
+/plutos-frontend/.env.local
+/plutos-frontend/.env.development.local
+/plutos-frontend/.env.test.local
+/plutos-frontend/.env.production.local
+
+/plutos-frontend/npm-debug.log*
+/plutos-frontend/yarn-debug.log*
+/plutos-frontend/yarn-error.log*
