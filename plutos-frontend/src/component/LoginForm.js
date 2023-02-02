@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { UserOutlined, LockOutlined } from "@ant-design/icons"
 import { Button, Form, Input } from "antd";
-import "./App.css";
 import { Typography } from "antd";
 import axios from "axios";
 
