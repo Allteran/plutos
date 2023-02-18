@@ -33,6 +33,7 @@ public class AuthHandler {
         this.passwordEncoder = passwordEncoder;
     }
 
+
     public Mono<ServerResponse> login(ServerRequest request) {
         Mono<AuthRequest> loginRequest = request.bodyToMono(AuthRequest.class);
         return loginRequest.flatMap(login -> userService.findByUsername(login.getLogin())

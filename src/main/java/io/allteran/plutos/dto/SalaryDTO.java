@@ -18,14 +18,7 @@ public class SalaryDTO {
     private LocalDateTime shiftEnd;
     private double workedHours;
     private double ratePerHour;
+    private double income;
+    private short efficiency;
     private String companyId;
-
-    public SalaryDTO(String userId, LocalDateTime shiftStart, LocalDateTime shiftEnd, double workedHours, double ratePerHour, String companyId) {
-        this.userId = userId;
-        this.shiftStart = shiftStart;
-        this.shiftEnd = shiftEnd;
-        this.workedHours = workedHours;
-        this.ratePerHour = ratePerHour;
-        this.companyId = companyId;
-    }
 }

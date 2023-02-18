@@ -23,5 +23,7 @@ public class Salary {
     private LocalDateTime shiftEnd;
     private double workedHours;
     private double ratePerHour;
+    private double income;
+    private short efficiency;
     private String companyId;
 }

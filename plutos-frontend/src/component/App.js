@@ -1,5 +1,5 @@
 import LoginForm from "./LoginForm";
-import ErrorPage from "./util/ErrorPage";
+import ErrorPage from "../util/ErrorPage";
 import Root from "../route/root";
 import ShiftList from "./ShiftList";
 import React from "react";

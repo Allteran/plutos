@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Repository
 public interface SalaryRepository extends ReactiveMongoRepository<Salary, String> {
-    @Query("{'userId': ?0}")
+//    @Query("{'userId': ?0}")
     Flux<Salary> findAllByUserId(String userId);
 
     @Query("{'userId' :  ?0, 'shiftStart' : {$gte: ?1, $lte: ?2}}")

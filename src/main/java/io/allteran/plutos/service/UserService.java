@@ -21,16 +21,15 @@ import java.util.regex.Pattern;
 public class UserService implements ReactiveUserDetailsService {
     private final UserRepository repository;
     private final CountryService countryService;
-    private final SalaryService salaryService;
+//    private final SalaryService salaryService;
     private final PasswordEncoder passwordEncoder;
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile(
             "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @Autowired
-    public UserService(UserRepository repository, CountryService countryService, SalaryService salaryService, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository repository, CountryService countryService, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.countryService = countryService;
-        this.salaryService = salaryService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -155,9 +154,9 @@ public class UserService implements ReactiveUserDetailsService {
     }
 
     public Mono<Void> delete(String id) {
-        return repository.deleteById(id)
-                .doOnNext(unused -> salaryService.findByUser(id)
-                        .doOnNext(salaryDTO -> salaryService.delete(salaryDTO.getId())));
+        return repository.deleteById(id);
+//                .doOnNext(unused -> salaryService.findByUser(id)
+//                        .doOnNext(salaryDTO -> salaryService.delete(salaryDTO.getId())));
     }
 
     public Mono<Boolean> existsById(String id) {

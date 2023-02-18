@@ -13,28 +13,17 @@ import java.time.LocalDateTime;
 
 @Service
 public class SalaryService {
-    private SalaryRepository repository;
-    private CompanyService companyService;
-    private UserService userService;
+    private final SalaryRepository repository;
+    private final CompanyService companyService;
+    private final UserService userService;
 
-    public void setRepository(SalaryRepository repository) {
+    @Autowired
+    public SalaryService(SalaryRepository repository, CompanyService companyService, UserService userService) {
         this.repository = repository;
-    }
-
-    public void setCompanyService(CompanyService companyService) {
         this.companyService = companyService;
-    }
-
-    public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
-    //    @Autowired
-//    public SalaryService(SalaryRepository repository, CompanyService companyService, UserService userService) {
-//        this.repository = repository;
-//        this.companyService = companyService;
-//        this.userService = userService;
-//    }
 
     public Flux<Salary> findAll() {
         return repository.findAll();
@@ -61,10 +50,19 @@ public class SalaryService {
                 companyService.ifExists(salary.getCompanyId()).flatMap(exists -> (exists)
                         ? Mono.just(salary)
                         : Mono.error(new NotFoundException("Can't create Salary. Company with ID [" + salary.getCompanyId() + "] not found in DB")))
-        ).doOnNext(salary ->
+        ).flatMap(salary ->
                 userService.existsById(salary.getUserId()).flatMap(exists -> (exists)
                         ? repository.save(salary)
-                        : Mono.error(new NotFoundException("Can't create Salary. User with ID [" + salary.getUserId() + "] not found in DB"))));
+                        : Mono.error(new NotFoundException("Can't create Salary. User with ID [" + salary.getUserId() + "] not found in DB"))
+//                {
+//                            if (exists) {
+//                                return repository.save(salary);
+//                            } else {
+//                                return Mono.error(new NotFoundException("Can't create Salary. User with ID [" + salary.getUserId() + "] not found in DB"));
+//                            }
+//                        }
+
+        ));
     }
 
     public Mono<Salary> update(Mono<Salary> salaryMono, String idFromDb) {
