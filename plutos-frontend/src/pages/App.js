@@ -1,5 +1,5 @@
 import LoginForm from "./LoginForm";
-import ErrorPage from "../util/ErrorPage";
+import ErrorPage from "./ErrorPage";
 import Root from "../route/root";
 import ShiftList from "./ShiftList";
 import React from "react";
@@ -8,9 +8,11 @@ import "./App.css";
 
 
 function App() {
+
+
     const router = createBrowserRouter([
         {
-            path: "/",
+            path: "",
             element: <Root />,
             errorElement: <ErrorPage />,
             children: [
@@ -26,6 +28,9 @@ function App() {
             errorElement: <ErrorPage />
         }
     ]);
+
+
+
     return (
         <React.StrictMode>
             <RouterProvider router={router}/>

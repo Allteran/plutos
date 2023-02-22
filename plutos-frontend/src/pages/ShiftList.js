@@ -4,7 +4,7 @@ import {useEffect} from "react";
 
 export default function ShiftList() {
     const URL_SHIFT_LIST = "http://localhost:8080/router/salary/search/user?userId=63b2dbaeebe1a13a221c028b"
-    const TOKEN = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sInN1YiI6InZpdGFsaWkucHJvemFwYXNAZ21haWwuY29tIiwiaWF0IjoxNjc2NzI1NDQ5LCJleHAiOjE2NzY4MTE4NDl9.l46eDUSzhcW_kfegLs2C2zGhIyybvQ0-wnVwLMzQ80NqUciaDFFDfxmYzw4hZIaMXJASQ-24bgMIfDZibZvTv';
+    const TOKEN = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sInN1YiI6InZpdGFsaWkucHJvemFwYXNAZ21haWwuY29tIiwiaWF0IjoxNjc2NzU3Mzk5LCJleHAiOjE2NzY4NDM3OTl9.2DZu_u-wOJJzIogx0BcJQcnPxR-8OwotHnKlCte95XNX4ThH-LRIqFWp66BjCI5_DkRNZ1BlwJXo1r4D3X3Tfg';
 
     const columns = [
         {
@@ -70,6 +70,7 @@ export default function ShiftList() {
             }
         }).then(res => {
             this.setState({shifts: res.data})
+            console.log('getShifts done')
         })
     };
 

@@ -1,13 +1,21 @@
-import {Layout, Menu, Space} from "antd";
-import { CalculatorOutlined, ScheduleOutlined } from "@ant-design/icons";
-import {useState} from "react";
-import {Link, Outlet} from "react-router-dom";
+import {Layout, Menu} from "antd";
+import {CalculatorOutlined, ScheduleOutlined} from "@ant-design/icons";
+import {useEffect, useState} from "react";
+import {Navigate, NavLink, Outlet} from "react-router-dom";
+import {STORAGE_KEY_TOKEN} from "../util/const";
 
 export default function Root() {
+    const [isLoggedIn, setLoggedIn] = useState(() => {
+        if(localStorage.getItem(STORAGE_KEY_TOKEN) === null) {
+            return false;
+        } else {
+            return true;
+        }
+    });
     const items = [
         {
             key: 'shiftList',
-            label: <Link to={'/shifts'}>Зміни</Link>,
+            label: <NavLink to="shifts">Зміни</NavLink>,
             icon: <ScheduleOutlined />
         },
         {
@@ -27,26 +35,38 @@ export default function Root() {
                 }
             ]
         },
-    ]
+    ];
 
-    return (
+    useEffect(() => {
+        if(localStorage.getItem(STORAGE_KEY_TOKEN) !== null) {
+            setLoggedIn(true);
+        } else {
+            setLoggedIn(false);
+        }
+    }, []);
 
-        <Layout className="layout">
-            <Layout.Header style={{backgroundColor:"white"}}>
-                <div className="logo">
-                    <Link to={'/'}><b>PLUTOS</b></Link>
-                </div>
-                <Menu
-                    mode="horizontal"
-                    items={items}></Menu>
-            </Layout.Header>
-            <Layout>
-                <Layout.Content >
-                    <div id="content">
-                        <Outlet/>
+    if(!isLoggedIn) {
+        return <Navigate replace to="/login" />;
+    } else {
+        return (
+
+            <Layout className="layout">
+                <Layout.Header style={{backgroundColor:"white"}}>
+                    <div className="logo">
+                        <NavLink to={'/'}><b>PLUTOS</b></NavLink>
                     </div>
-                </Layout.Content>
+                    <Menu
+                        mode="horizontal"
+                        items={items}></Menu>
+                </Layout.Header>
+                <Layout>
+                    <Layout.Content >
+                        <div id="content">
+                            <Outlet/>
+                        </div>
+                    </Layout.Content>
+                </Layout>
             </Layout>
-        </Layout>
-    )
+        )
+    }
 }

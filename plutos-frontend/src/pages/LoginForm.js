@@ -3,11 +3,14 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons"
 import { Button, Form, Input } from "antd";
 import { Typography } from "antd";
 import axios from "axios";
+import { STORAGE_KEY_TOKEN, URL_LOGIN } from "../util/const";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
+
 function LoginForm () {
-    const url = 'http://localhost:8080/auth/login';
+    const navigate = useNavigate();
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
 
@@ -28,10 +31,12 @@ function LoginForm () {
             password: password
         }
 
-        axios.post(url, credentials)
+        axios.post(URL_LOGIN, credentials)
             .then(response => {
-                console.log('Login completed:');
-                console.log('Token: ', response.data.token)
+                localStorage.setItem(STORAGE_KEY_TOKEN, response.data.token);
+                console.log('User logged in, token is: ', response.data.token);
+                navigate("/");
+
             })
     };
 
