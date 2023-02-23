@@ -10,7 +10,14 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthResponse {
+    private String userId;
     private String login;
     private String token;
     private String message;
+
+    public AuthResponse(String login, String token, String message) {
+        this.login = login;
+        this.token = token;
+        this.message = message;
+    }
 }

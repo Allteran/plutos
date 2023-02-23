@@ -3,7 +3,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons"
 import { Button, Form, Input } from "antd";
 import { Typography } from "antd";
 import axios from "axios";
-import { STORAGE_KEY_TOKEN, URL_LOGIN } from "../util/const";
+import {STORAGE_KEY_TOKEN, STORAGE_KEY_LOGIN, URL_LOGIN, STORAGE_KEY_USER_ID} from "../util/const";
 import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
@@ -24,8 +24,6 @@ function LoginForm () {
 
     const handleClick = event => {
         event.preventDefault();
-        console.log('handleClick. Login: ', login);
-        console.log('handleClick. Password: ', password);
         let credentials = {
             login: login,
             password: password
@@ -34,7 +32,8 @@ function LoginForm () {
         axios.post(URL_LOGIN, credentials)
             .then(response => {
                 localStorage.setItem(STORAGE_KEY_TOKEN, response.data.token);
-                console.log('User logged in, token is: ', response.data.token);
+                localStorage.setItem(STORAGE_KEY_LOGIN, response.data.login);
+                localStorage.setItem(STORAGE_KEY_USER_ID, response.data.userId);
                 navigate("/");
 
             })
@@ -61,13 +60,6 @@ function LoginForm () {
             message: 'Please input your password!',
         },
     ];
-
-    // handleClick(login, password) {
-    //   console.log('Click!');
-    //   console.log('Login: ', login);
-    //   console.log('Password: ', password);
-    // };
-
 
     return (
         <div>

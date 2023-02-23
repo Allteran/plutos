@@ -1,17 +1,20 @@
-import {Button, Table} from "antd";
+import {Table} from "antd";
 import axios from "axios";
-import {useEffect} from "react";
+import {STORAGE_KEY_TOKEN, STORAGE_KEY_USER_ID, URL_SHIFT_LIST_PUBLIC} from "../util/const";
+import {useEffect, useState} from "react";
 
 export default function ShiftList() {
-    const URL_SHIFT_LIST = "http://localhost:8080/router/salary/search/user?userId=63b2dbaeebe1a13a221c028b"
-    const TOKEN = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sInN1YiI6InZpdGFsaWkucHJvemFwYXNAZ21haWwuY29tIiwiaWF0IjoxNjc2NzU3Mzk5LCJleHAiOjE2NzY4NDM3OTl9.2DZu_u-wOJJzIogx0BcJQcnPxR-8OwotHnKlCte95XNX4ThH-LRIqFWp66BjCI5_DkRNZ1BlwJXo1r4D3X3Tfg';
+    const [shiftList, setShiftList] = useState();
+    const [loading, setLoading] = useState(true);
+    const size = 'middle';
+
+
+    const tableProps = {
+        loading,
+        size
+    }
 
     const columns = [
-        {
-            title: 'Дата',
-            dataIndex: 'date',
-            key: 'date',
-        },
         {
             title: 'Початок зміни',
             dataIndex: 'shiftStart',
@@ -44,46 +47,32 @@ export default function ShiftList() {
         }
     ];
 
-    const datasource = [
-        {
-            date: '01.01.2023',
-            shiftStart: '07:00',
-            shiftEnd: '19:00',
-            workedHours: "12",
-            ratePerHour: '16.60 zl',
-            income: '2000 zl',
-            efficiency: "120%"
-
-        }
-    ];
-
-    const state = {
-        shifts: []
-    };
-
     const getShifts = async () => {
-        console.log('Getting shift list from: ', URL_SHIFT_LIST);
-        console.log('Header: Authorization: Bearer ' + TOKEN);
-        await axios.get(URL_SHIFT_LIST, {
+        let token = localStorage.getItem(STORAGE_KEY_TOKEN);
+        let userId = localStorage.getItem(STORAGE_KEY_USER_ID);
+        await axios.get(URL_SHIFT_LIST_PUBLIC + userId, {
             headers: {
-                'Authorization': 'Bearer ' + TOKEN
+                'Authorization': 'Bearer ' + token,
             }
         }).then(res => {
-            this.setState({shifts: res.data})
-            console.log('getShifts done')
+            setShiftList(res.data.map(el =>({...el, key: el.id})));
+            setLoading(false);
         })
     };
 
-    // useEffect(() => {
-    //     getShifts().then();
-    // }, []);
+    useEffect(() => {
+        getShifts().then(() => {
+        });
+    }, []);
 
 
 
     return (
         <div id="shiftList">
-            <Table dataSource={state.shifts} columns={columns}/>
-            <Button type="primary" onClick={getShifts}>TEST DOWNLOAD SHIFTS</Button>
+            <Table
+                {...tableProps}
+                dataSource={shiftList}
+                columns={columns}/>
         </div>
 
     );

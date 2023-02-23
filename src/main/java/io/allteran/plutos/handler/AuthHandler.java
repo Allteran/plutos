@@ -39,11 +39,12 @@ public class AuthHandler {
         return loginRequest.flatMap(login -> userService.findByUsername(login.getLogin())
                 .flatMap(user -> {
                     if (passwordEncoder.matches(login.getPassword(), user.getPassword())) {
+                        User u = (User) user;
                         return ServerResponse.ok()
                                 .contentType(APPLICATION_JSON)
                                 .body(
                                         BodyInserters.fromValue(
-                                                new AuthResponse(user.getUsername(), jwtUtil.generateToken((User) user), MESSAGE_AUTH_SUCCESS)));
+                                                new AuthResponse(u.getId(), user.getUsername(), jwtUtil.generateToken(u), MESSAGE_AUTH_SUCCESS)));
                     } else {
                         return ServerResponse
                                 .badRequest()
