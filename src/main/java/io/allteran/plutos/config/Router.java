@@ -1335,7 +1335,9 @@ public class Router {
         RouterFunction<ServerResponse> router = RouterFunctions
                 .route()
                 .path("/auth", builder -> builder
-                        .POST("/login", accept(APPLICATION_JSON), handler::login))
+                        .POST("/login", accept(APPLICATION_JSON), handler::login)
+                        .POST("/validateToken", accept(APPLICATION_JSON), handler::validateToken)
+                )
                 .build();
         return router;
     }

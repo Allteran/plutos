@@ -33,7 +33,7 @@ public class SalaryService {
         return repository.findById(id);
     }
 
-    public Flux<Salary> findByUser(String userId) {
+    public Flux<Salary> findByUserId(String userId) {
         return repository.findAllByUserId(userId);
     }
 

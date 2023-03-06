@@ -35,6 +35,8 @@ function LoginForm () {
                 localStorage.setItem(STORAGE_KEY_LOGIN, response.data.login);
                 localStorage.setItem(STORAGE_KEY_USER_ID, response.data.userId);
                 navigate("/");
+                console.log('login = ', response.data.login);
+                console.log('userId = ', response.data.userId);
 
             })
     };

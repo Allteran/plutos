@@ -60,7 +60,6 @@ public class JwtUtil {
     public boolean validateToken(String authToken) {
         Claims claims = getClaimsFromToken(authToken);
         Date expDate = claims.getExpiration();
-        boolean isTokenNotExpired = new Date().before(expDate);
-        return isTokenNotExpired;
+        return new Date().before(expDate);
     }
 }

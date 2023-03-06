@@ -45,7 +45,7 @@ public class SalaryHandler {
 
     public Mono<ServerResponse> findByUser(ServerRequest request) {
         String id = request.queryParam("userId").orElse("");
-        Flux<SalaryDTO> findByUserFlux = salaryService.findByUser(id).map(EntityMapper::convertToDTO);
+        Flux<SalaryDTO> findByUserFlux = salaryService.findByUserId(id).map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)

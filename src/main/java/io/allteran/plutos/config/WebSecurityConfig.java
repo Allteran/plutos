@@ -57,7 +57,7 @@ public class WebSecurityConfig {
                 .authenticationManager(authenticationManager)
                 .securityContextRepository(securityContextRepository)
                 .authorizeExchange()
-                .pathMatchers("/auth/login", "/favicon.ico").permitAll()
+                .pathMatchers("/auth/login", "/auth/validateToken", "/favicon.ico").permitAll()
                 .pathMatchers("/route/adm/**").hasRole("ADMIN")
                 .anyExchange().authenticated()
                 .and()

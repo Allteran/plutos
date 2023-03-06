@@ -3,6 +3,7 @@ import {CalculatorOutlined, ScheduleOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
 import {Navigate, NavLink, Outlet} from "react-router-dom";
 import {STORAGE_KEY_TOKEN} from "../util/const";
+import {validateToken} from "../util/authUtils";
 
 export default function Root() {
     const [isLoggedIn, setLoggedIn] = useState(() => {
@@ -39,7 +40,13 @@ export default function Root() {
 
     useEffect(() => {
         if(localStorage.getItem(STORAGE_KEY_TOKEN) !== null) {
-            setLoggedIn(true);
+            validateToken(localStorage.getItem(STORAGE_KEY_TOKEN))
+                .then(res => {
+                    setLoggedIn(true);
+                })
+                .catch(er => {
+                    setLoggedIn(false);
+                })
         } else {
             setLoggedIn(false);
         }
