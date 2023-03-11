@@ -27,3 +27,15 @@
     height: 31px;
     margin: 16px 24px 16px 0;
 }
+
+.logout-btn {
+    float: right;
+}
+.table-btn {
+    padding: 0;
+    text-align: center;
+}
+.title-main {
+    padding-left:1%;
+    text-align: left;
+}

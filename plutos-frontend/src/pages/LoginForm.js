@@ -35,18 +35,8 @@ function LoginForm () {
                 localStorage.setItem(STORAGE_KEY_LOGIN, response.data.login);
                 localStorage.setItem(STORAGE_KEY_USER_ID, response.data.userId);
                 navigate("/");
-                console.log('login = ', response.data.login);
-                console.log('userId = ', response.data.userId);
 
             })
-    };
-
-    const onFinish = (values) => {
-        console.log('Successful login: ', values);
-    };
-
-    const onFinishFailed =(errorMessage) => {
-        console.log('Failed: ', errorMessage);
     };
 
     const emailRules = [
@@ -65,7 +55,7 @@ function LoginForm () {
 
     return (
         <div>
-            <Form onFinish={onFinish} onFinishFailed={onFinishFailed} className="login-form">
+            <Form className="login-form">
                 <Form.Item rules={emailRules}>
                     <Title className="login-title" level={3}>PLUTOS | Авторизація</Title>
 

@@ -4,6 +4,8 @@ import {STORAGE_KEY_TOKEN, STORAGE_KEY_USER_ID, URL_SHIFT_LIST_PUBLIC} from "../
 import {validateToken} from "../util/authUtils";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import moment from "moment";
+import { Typography } from "antd";
 
 export default function ShiftList() {
     const navigate = useNavigate();
@@ -14,6 +16,11 @@ export default function ShiftList() {
     const [modalText, setModalText] = useState('Увага! Відмініти цю дію неможливо. Ви впевнені, що хочете видалити запис?');
     const [deleteRecordId, setDeleteRecordId] = useState('');
     const size = 'middle';
+    const currentDate = new Date();
+    const titleDateFrom = moment(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)).format('DD.MM.YYYY')
+    const titleDateTo = moment(currentDate).format('DD.MM.YYYY');
+
+    const { Title } = Typography;
 
     const tableProps = {
         loading,
@@ -74,7 +81,8 @@ export default function ShiftList() {
             key: 'actions',
             render: (_, record) => (
                 <Space size="middle">
-                    <Button type="link" onClick={() => showModalDeleteSalary(record)}>Видалити</Button>
+                    <Button className="table-btn" size="small" type="link" onClick={() => navToEditPage(record)}>Редагувати</Button>
+                    <Button className="table-btn" size="small" type="link" onClick={() => showModalDeleteSalary(record)}>Видалити</Button>
                     <Modal
                         title="Видалення запису"
                         open={openModal}
@@ -93,6 +101,11 @@ export default function ShiftList() {
         }
     ];
 
+    function navToEditPage(record) {
+        console.log('Edit page for record with ID:' + record.id);
+        return null;
+    }
+
     // const deleteSalary = async (salaryId) => {
     //
     // };
@@ -108,6 +121,10 @@ export default function ShiftList() {
                 userId: userId
             }
         }).then(res => {
+            res.data.map(el => {
+                el.shiftStart = dateTimeFormat(el.shiftStart);
+                el.shiftEnd = dateTimeFormat(el.shiftEnd);
+            });
             setSalaryList(res.data.map(el =>({...el, key:el.id})));
             setLoading(false)
         }).catch(er => {
@@ -122,13 +139,23 @@ export default function ShiftList() {
         getSalaryList()
     }, []);
 
+    function dateTimeFormat(dateTime) {
+        return moment(dateTime).format('DD.MM.YYYY HH:mm');
+    }
+
+    function summary(record) {
+
+    }
+
 
 
     return (
         <div id="shiftList">
+            <Typography.Title className="title-main" level={4}>Дані по змінам за період з {titleDateFrom} по {titleDateTo}</Typography.Title>
             <Table
                 {...tableProps}
                 dataSource={salaryList}
+                bordered={true}
                 columns={columns}/>
         </div>
 

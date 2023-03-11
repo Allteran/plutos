@@ -1,5 +1,5 @@
 import axios from "axios";
-import { URL_VALIDATE_TOKEN, STORAGE_KEY_TOKEN } from "./const";
+import {URL_VALIDATE_TOKEN} from "./const";
 
 export async function validateToken(token){
     await axios.post(URL_VALIDATE_TOKEN, null, {
@@ -7,7 +7,7 @@ export async function validateToken(token){
             token: token
         }
     }).catch(er => {
-        throw new Error('Token error');
+        throw new Error('Token error' + er);
     })
 }
 

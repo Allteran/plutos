@@ -1,8 +1,8 @@
-import {Layout, Menu} from "antd";
-import {CalculatorOutlined, ScheduleOutlined} from "@ant-design/icons";
+import {Button, Layout, Menu} from "antd";
+import {CalculatorOutlined, ScheduleOutlined, LogoutOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
 import {Navigate, NavLink, Outlet} from "react-router-dom";
-import {STORAGE_KEY_TOKEN} from "../util/const";
+import {STORAGE_KEY_LOGIN, STORAGE_KEY_TOKEN, STORAGE_KEY_USER_ID} from "../util/const";
 import {validateToken} from "../util/authUtils";
 
 export default function Root() {
@@ -52,6 +52,14 @@ export default function Root() {
         }
     }, []);
 
+    const logout = event => {
+      event.preventDefault();
+      localStorage.setItem(STORAGE_KEY_TOKEN, null);
+      localStorage.setItem(STORAGE_KEY_LOGIN, null);
+      localStorage.setItem(STORAGE_KEY_USER_ID, null);
+      setLoggedIn(false);
+    };
+
     if(!isLoggedIn) {
         return <Navigate replace to="/login" />;
     } else {
@@ -62,9 +70,14 @@ export default function Root() {
                     <div className="logo">
                         <NavLink to={'/'}><b>PLUTOS</b></NavLink>
                     </div>
+                    <div className="logout-btn">
+                        <Button type="link" onClick={logout} icon={<LogoutOutlined />}>Вийти</Button>
+                    </div>
                     <Menu
                         mode="horizontal"
-                        items={items}></Menu>
+                        items={items}>
+                    </Menu>
+
                 </Layout.Header>
                 <Layout>
                     <Layout.Content >
