@@ -1,11 +1,12 @@
 import {Button, Layout, Menu} from "antd";
 import {CalculatorOutlined, ScheduleOutlined, LogoutOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
-import {Navigate, NavLink, Outlet} from "react-router-dom";
+import {Navigate, NavLink, Outlet, useNavigate} from "react-router-dom";
 import {STORAGE_KEY_LOGIN, STORAGE_KEY_TOKEN, STORAGE_KEY_USER_ID} from "../util/const";
 import {validateToken} from "../util/authUtils";
 
 export default function Root() {
+    const navigate = useNavigate();
     const [isLoggedIn, setLoggedIn] = useState(() => {
         if(localStorage.getItem(STORAGE_KEY_TOKEN) === null) {
             return false;
@@ -20,7 +21,7 @@ export default function Root() {
             icon: <ScheduleOutlined />
         },
         {
-            label: 'Зареєструвати зміну',
+            label: <NavLink to="shifts/new">Зареєструвати зміну</NavLink>,
             key: 'shiftCalc',
             icon: <CalculatorOutlined />
         },
@@ -60,6 +61,11 @@ export default function Root() {
       setLoggedIn(false);
     };
 
+    const openProfile = () => {
+        navigate('/profile');
+    }
+
+
     if(!isLoggedIn) {
         return <Navigate replace to="/login" />;
     } else {
@@ -71,6 +77,7 @@ export default function Root() {
                         <NavLink to={'/'}><b>PLUTOS</b></NavLink>
                     </div>
                     <div className="logout-btn">
+                        <Button type="link" onClick={openProfile}>PROFILE</Button>
                         <Button type="link" onClick={logout} icon={<LogoutOutlined />}>Вийти</Button>
                     </div>
                     <Menu

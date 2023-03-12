@@ -33,15 +33,6 @@ public class UserDTO {
     private String newPassword;
     @JsonView(Views.Public.class)
     private String countryId;
-    //saves only IDs of some salary, so it won't be inner object in Mongo
-    @JsonView(Views.Public.class)
-    private List<String> salaryList;
-    @JsonView(Views.Public.class)
-    private float totalSalary;
-    @JsonView(Views.Public.class)
-    private float totalTax;
-    @JsonView(Views.Public.class)
-    private float netPay;
     @JsonView(Views.Public.class)
     private LocalDate dateOfBirth;
     @JsonView(Views.Public.class)
@@ -50,5 +41,8 @@ public class UserDTO {
     private Set<String> privilegeIds;
     @JsonView(Views.Public.class)
     private boolean active;
+    @JsonView(Views.Public.class)
+    private double ratePerHour;
+
 
 }

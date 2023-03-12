@@ -1,29 +1,22 @@
-package io.allteran.plutos.domain;
+package io.allteran.plutos.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Document(collection = "salary")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Salary {
-    @Id
+public class ShiftDTO {
     private String id;
     private String userId;
     private LocalDateTime shiftStart;
     private LocalDateTime shiftEnd;
+    int breakDuration;
     private double workedHours;
     private double ratePerHour;
     private double income;
-    private short efficiency;
     private String companyId;
 }

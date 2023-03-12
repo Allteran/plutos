@@ -691,7 +691,7 @@ public class Router {
                                             responseCode = "200",
                                             description = "successful operation",
                                             content = @Content(schema = @Schema(
-                                                    implementation = SalaryDTO.class
+                                                    implementation = ShiftDTO.class
                                             ))
                                     ),
                                     @ApiResponse(
@@ -720,7 +720,7 @@ public class Router {
                                             responseCode = "200",
                                             description = "successful operation",
                                             content = @Content(schema = @Schema(
-                                                    implementation = SalaryDTO.class
+                                                    implementation = ShiftDTO.class
                                             ))
                                     ),
                                     @ApiResponse(
@@ -749,7 +749,7 @@ public class Router {
                                             responseCode = "200",
                                             description = "successful operation",
                                             content = @Content(schema = @Schema(
-                                                    implementation = SalaryDTO.class
+                                                    implementation = ShiftDTO.class
                                             ))
                                     ),
                                     @ApiResponse(
@@ -786,7 +786,7 @@ public class Router {
                                             responseCode = "200",
                                             description = "successful operation",
                                             content = @Content(schema = @Schema(
-                                                    implementation = SalaryDTO.class
+                                                    implementation = ShiftDTO.class
                                             ))
                                     ),
                                     @ApiResponse(
@@ -823,7 +823,7 @@ public class Router {
                                             responseCode = "200",
                                             description = "successful operation",
                                             content = @Content(schema = @Schema(
-                                                    implementation = SalaryDTO.class
+                                                    implementation = ShiftDTO.class
                                             ))
                                     ),
                                     @ApiResponse(
@@ -862,7 +862,7 @@ public class Router {
                                             responseCode = "200",
                                             description = "successful operation",
                                             content = @Content(schema = @Schema(
-                                                    implementation = SalaryDTO.class
+                                                    implementation = ShiftDTO.class
                                             ))
                                     ),
                                     @ApiResponse(
@@ -897,7 +897,7 @@ public class Router {
                                             responseCode = "200",
                                             description = "successful operation",
                                             content = @Content(schema = @Schema(
-                                                    implementation = SalaryDTO.class
+                                                    implementation = ShiftDTO.class
                                             ))
                                     ),
                                     @ApiResponse(
@@ -911,7 +911,7 @@ public class Router {
                             },
                             requestBody = @RequestBody(
                                     content = @Content(schema = @Schema(
-                                            implementation = SalaryDTO.class
+                                            implementation = ShiftDTO.class
                                     ))
                             )
                     )
@@ -932,7 +932,7 @@ public class Router {
                                             responseCode = "200",
                                             description = "successful operation",
                                             content = @Content(schema = @Schema(
-                                                    implementation = SalaryDTO.class
+                                                    implementation = ShiftDTO.class
                                             ))
                                     ),
                                     @ApiResponse(
@@ -953,7 +953,7 @@ public class Router {
                             },
                             requestBody = @RequestBody(
                                     content = @Content(schema = @Schema(
-                                            implementation = SalaryDTO.class
+                                            implementation = ShiftDTO.class
                                     ))
                             )
                     )

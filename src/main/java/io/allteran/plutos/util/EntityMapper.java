@@ -39,14 +39,14 @@ public class EntityMapper {
         return dto;
     }
 
-    public static SalaryDTO convertToDTO(Salary s) {
-        SalaryDTO dto = new SalaryDTO();
+    public static ShiftDTO convertToDTO(Shift s) {
+        ShiftDTO dto = new ShiftDTO();
         BeanUtils.copyProperties(s, dto);
         return dto;
     }
 
-    public static Salary convertToEntity(SalaryDTO dto) {
-        Salary s = new Salary();
+    public static Shift convertToEntity(ShiftDTO dto) {
+        Shift s = new Shift();
         BeanUtils.copyProperties(dto, s);
         return s;
     }

@@ -29,15 +29,13 @@ public class User implements UserDetails {
     @Transient
     private String newPassword;
     private String countryId;
-    //saves only IDs of some salary, so it won't be inner object in Mongo
-    private List<String> salaryList;
-    private float totalSalary;
-    private float totalTax;
-    private float netPay;
     private LocalDate dateOfBirth;
     private Set<Role> roles;
     private Set<String> privilegeIds;
     private boolean active;
+    private String agencyId;
+    private double ratePerHour;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

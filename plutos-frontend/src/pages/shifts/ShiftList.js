@@ -1,7 +1,7 @@
 import {Button, Modal, Space, Table} from "antd";
 import axios from "axios";
-import {STORAGE_KEY_TOKEN, STORAGE_KEY_USER_ID, URL_SHIFT_LIST_PUBLIC} from "../util/const";
-import {validateToken} from "../util/authUtils";
+import {STORAGE_KEY_TOKEN, STORAGE_KEY_USER_ID, URL_SHIFT_LIST_PUBLIC} from "../../util/const";
+import {validateToken} from "../../util/authUtils";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import moment from "moment";
@@ -9,7 +9,7 @@ import { Typography } from "antd";
 
 export default function ShiftList() {
     const navigate = useNavigate();
-    const [salaryList, setSalaryList] = useState();
+    const [shiftList, setShiftList] = useState();
     const [loading, setLoading] = useState(true);
     const [modalLoading, setModalLoading] = useState(false);
     const [openModal, setOpenModal] = useState(false);
@@ -20,7 +20,6 @@ export default function ShiftList() {
     const titleDateFrom = moment(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)).format('DD.MM.YYYY')
     const titleDateTo = moment(currentDate).format('DD.MM.YYYY');
 
-    const { Title } = Typography;
 
     const tableProps = {
         loading,
@@ -34,7 +33,7 @@ export default function ShiftList() {
 
     const confirmDelete = () => {
         setModalText('Видаляємо запис');
-        console.log('Deleting salary record: ', deleteRecordId);
+        console.log('Deleting shift record: ', deleteRecordId);
         setModalLoading(true);
         setOpenModal(false);
         setModalLoading(false)
@@ -57,6 +56,14 @@ export default function ShiftList() {
             key: 'shiftEnd'
         },
         {
+            title: 'Перерва',
+            dataIndex: 'breakDuration',
+            key: 'breakDuration',
+            render: (_, record) => (
+                    <div>{record.breakDuration} хв</div>
+    )
+        },
+        {
             title: 'Кількість годин',
             dataIndex: 'workedHours',
             key: 'workedHours',
@@ -70,11 +77,6 @@ export default function ShiftList() {
             title: 'Прибуток',
             dataIndex: 'income',
             key: 'income',
-        },
-        {
-            title: 'Результативність',
-            dataIndex: 'efficiency',
-            key: 'efficiency',
         },
         {
             title: 'Дії',
@@ -124,8 +126,9 @@ export default function ShiftList() {
             res.data.map(el => {
                 el.shiftStart = dateTimeFormat(el.shiftStart);
                 el.shiftEnd = dateTimeFormat(el.shiftEnd);
+                return el;
             });
-            setSalaryList(res.data.map(el =>({...el, key:el.id})));
+            setShiftList(res.data.map(el =>({...el, key:el.id})));
             setLoading(false)
         }).catch(er => {
             console.log('getSalaryList: error = ', er);
@@ -136,25 +139,19 @@ export default function ShiftList() {
     }
 
     useEffect( ()  => {
-        getSalaryList()
+        getSalaryList();
     }, []);
 
     function dateTimeFormat(dateTime) {
         return moment(dateTime).format('DD.MM.YYYY HH:mm');
     }
 
-    function summary(record) {
-
-    }
-
-
-
     return (
         <div id="shiftList">
             <Typography.Title className="title-main" level={4}>Дані по змінам за період з {titleDateFrom} по {titleDateTo}</Typography.Title>
             <Table
                 {...tableProps}
-                dataSource={salaryList}
+                dataSource={shiftList}
                 bordered={true}
                 columns={columns}/>
         </div>
