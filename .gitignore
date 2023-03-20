@@ -58,3 +58,4 @@ out/
 /plutos-frontend/npm-debug.log*
 /plutos-frontend/yarn-debug.log*
 /plutos-frontend/yarn-error.log*
+/plutos-frontend/yarn.lock

@@ -16,27 +16,27 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class SalaryHandler {
+public class ShiftHandler {
     private final ShiftService shiftService;
 
     @Autowired
-    public SalaryHandler(ShiftService shiftService) {
+    public ShiftHandler(ShiftService shiftService) {
         this.shiftService = shiftService;
     }
 
     public Mono<ServerResponse> findAll(ServerRequest request) {
-        Flux<ShiftDTO> salaryList = shiftService.findAll().map(EntityMapper::convertToDTO);
+        Flux<ShiftDTO> shifts = shiftService.findAll().map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(salaryList, ShiftDTO.class);
+                .body(shifts, ShiftDTO.class);
     }
 
     public Mono<ServerResponse> findById(ServerRequest request) {
         String id = request.pathVariable("id");
         Mono<ShiftDTO> findByIdMono = shiftService.findById(id)
                 .map(EntityMapper::convertToDTO)
-                .switchIfEmpty(Mono.error(new NotFoundException("Can't find Salary with ID [" + id + "]")));
+                .switchIfEmpty(Mono.error(new NotFoundException("Can't find Shift with ID [" + id + "]")));
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -81,23 +81,23 @@ public class SalaryHandler {
 
     public Mono<ServerResponse> create(ServerRequest request) {
         Mono<ShiftDTO> body = request.bodyToMono(ShiftDTO.class);
-        Mono<ShiftDTO> createdSalaryDTO = shiftService.create(body.map(EntityMapper::convertToEntity))
+        Mono<ShiftDTO> createdShiftDTO = shiftService.create(body.map(EntityMapper::convertToEntity))
                 .map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(createdSalaryDTO, ShiftDTO.class);
+                .body(createdShiftDTO, ShiftDTO.class);
     }
 
     public Mono<ServerResponse> update(ServerRequest request) {
         String idFromDb = request.pathVariable("id");
         Mono<ShiftDTO> body = request.bodyToMono(ShiftDTO.class);
-        Mono<ShiftDTO> updatedSalaryDTO = shiftService.update(body.map(EntityMapper::convertToEntity), idFromDb)
+        Mono<ShiftDTO> updatedShiftDTO = shiftService.update(body.map(EntityMapper::convertToEntity), idFromDb)
                 .map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(updatedSalaryDTO, ShiftDTO.class);
+                .body(updatedShiftDTO, ShiftDTO.class);
     }
 
     public Mono<ServerResponse> delete(ServerRequest request) {

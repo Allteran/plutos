@@ -1,6 +1,5 @@
 package io.allteran.plutos.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -10,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -33,7 +31,7 @@ public class User implements UserDetails {
     private Set<Role> roles;
     private Set<String> privilegeIds;
     private boolean active;
-    private String agencyId;
+    private String employerId;
     private double ratePerHour;
 
 

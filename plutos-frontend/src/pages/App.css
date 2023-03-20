@@ -43,3 +43,7 @@
 .profile-label{
     font-weight: bold;
 }
+
+.shift-registration {
+    max-width: 600px;
+}

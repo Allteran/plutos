@@ -4,3 +4,4 @@
 * OpenAPI and Swagger3 for generation documentation
 * Spring Security
 * JWT authentication system
+* React.js + ANT for frontend base

@@ -43,6 +43,6 @@ public class UserDTO {
     private boolean active;
     @JsonView(Views.Public.class)
     private double ratePerHour;
-
-
+    @JsonView(Views.Public.class)
+    private String employerId;
 }

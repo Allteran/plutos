@@ -677,15 +677,15 @@ public class Router {
 
     @RouterOperations({
             @RouterOperation(
-                    path = "/route/salary",
+                    path = "/route/shifts",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
                     method = RequestMethod.GET,
-                    beanClass = SalaryHandler.class,
+                    beanClass = ShiftHandler.class,
                     beanMethod = "findAll",
                     operation = @Operation(
-                            operationId = "findAllSalary",
+                            operationId = "findAllShifts",
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
@@ -706,15 +706,15 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/salary/",
+                    path = "/route/shifts/",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
                     method = RequestMethod.GET,
-                    beanClass = SalaryHandler.class,
+                    beanClass = ShiftHandler.class,
                     beanMethod = "findAll",
                     operation = @Operation(
-                            operationId = "findAllSalary",
+                            operationId = "findAllShifts",
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
@@ -735,15 +735,15 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/salary/{id}",
+                    path = "/route/shifts/{id}",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
                     method = RequestMethod.GET,
-                    beanClass = SalaryHandler.class,
+                    beanClass = ShiftHandler.class,
                     beanMethod = "findById",
                     operation = @Operation(
-                            operationId = "findSalaryById",
+                            operationId = "findShiftById",
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
@@ -754,7 +754,7 @@ public class Router {
                                     ),
                                     @ApiResponse(
                                             responseCode = "404",
-                                            description = "Can't find Salary with given ID"
+                                            description = "Can't find Shift with given ID"
                                     ),
                                     @ApiResponse(
                                             responseCode = "401",
@@ -766,21 +766,21 @@ public class Router {
                                     )
                             },
                             parameters = {
-                                    @Parameter(in = ParameterIn.PATH, name = "id", description = "Salary ID")
+                                    @Parameter(in = ParameterIn.PATH, name = "id", description = "Shift ID")
                             }
                     )
             ),
             @RouterOperation(
-                    path = "/route/salary/search/user",
+                    path = "/route/shifts/search/user",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
                     method = RequestMethod.GET,
-                    beanClass = SalaryHandler.class,
+                    beanClass = ShiftHandler.class,
                     beanMethod = "findByUser",
                     operation = @Operation(
-                            operationId = "findSalaryByUserId",
-                            description = "Find list of Salary based on given UserID",
+                            operationId = "findShiftByUserId",
+                            description = "Find list of Shift based on given UserID",
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
@@ -791,7 +791,7 @@ public class Router {
                                     ),
                                     @ApiResponse(
                                             responseCode = "404",
-                                            description = "Can't find Salary with given UserID"
+                                            description = "Can't find Shift with given UserID"
                                     ),
                                     @ApiResponse(
                                             responseCode = "401",
@@ -808,16 +808,16 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/salary/search/user-date",
+                    path = "/route/shifts/search/user-date",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
                     method = RequestMethod.GET,
-                    beanClass = SalaryHandler.class,
+                    beanClass = ShiftHandler.class,
                     beanMethod = "findByUserDate",
                     operation = @Operation(
-                            operationId = "findSalaryByUserIdAndDateRange",
-                            description = "Find list of Salary based on given UserID and date range (for shiftStart)",
+                            operationId = "findShiftByUserIdAndDateRange",
+                            description = "Find list of Shift based on given UserID and date range (for shiftStart)",
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
@@ -840,23 +840,23 @@ public class Router {
                             },
                             parameters = {
                                     @Parameter(in = ParameterIn.QUERY, name = "userId", description = "User ID"),
-                                    @Parameter(in = ParameterIn.QUERY, name = "from", description = "Time from you need to filter salary by User"),
-                                    @Parameter(in = ParameterIn.QUERY, name = "to", description = "Time to you need to filter salary by User")
+                                    @Parameter(in = ParameterIn.QUERY, name = "from", description = "Time from you need to filter Shift by User"),
+                                    @Parameter(in = ParameterIn.QUERY, name = "to", description = "Time to you need to filter Shift by User")
                             }
                     )
 
             ),
             @RouterOperation(
-                    path = "/route/salary/search/user-company",
+                    path = "/route/shifts/search/user-company",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
                     method = RequestMethod.GET,
-                    beanClass = SalaryHandler.class,
+                    beanClass = ShiftHandler.class,
                     beanMethod = "findByUserCompany",
                     operation = @Operation(
-                            operationId = "findSalaryByUserIdAndCompanyId",
-                            description = "Find list of Salary based on given UserID and CompanyID",
+                            operationId = "findShiftByUserIdAndCompanyId",
+                            description = "Find list of Shifts based on given UserID and CompanyID",
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
@@ -882,16 +882,16 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/salary/new",
+                    path = "/route/shifts/new",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
                     method = RequestMethod.POST,
-                    beanClass = SalaryHandler.class,
+                    beanClass = ShiftHandler.class,
                     beanMethod = "create",
                     operation = @Operation(
-                            operationId = "createSalary",
-                            description = "Creates new Salary entity for certain User",
+                            operationId = "createShift",
+                            description = "Creates new Shift entity for certain User",
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
@@ -917,16 +917,16 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/salary/update/{id}",
+                    path = "/route/shifts/update/{id}",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
                     method = RequestMethod.PUT,
-                    beanClass = SalaryHandler.class,
+                    beanClass = ShiftHandler.class,
                     beanMethod = "update",
                     operation = @Operation(
-                            operationId = "updateSalary",
-                            description = "Updates existing Salary entity",
+                            operationId = "updateShift",
+                            description = "Updates existing Shift entity",
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
@@ -937,7 +937,7 @@ public class Router {
                                     ),
                                     @ApiResponse(
                                             responseCode = "404",
-                                            description = "Can't find Salary with given ID"
+                                            description = "Can't find Shift with given ID"
                                     ),
                                     @ApiResponse(
                                             responseCode = "401",
@@ -949,7 +949,7 @@ public class Router {
                                     )
                             },
                             parameters = {
-                                    @Parameter(in = ParameterIn.PATH, name = "id", description = "Salary ID")
+                                    @Parameter(in = ParameterIn.PATH, name = "id", description = "Shift ID")
                             },
                             requestBody = @RequestBody(
                                     content = @Content(schema = @Schema(
@@ -959,16 +959,16 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/salary/delete/{id}",
+                    path = "/route/shifts/delete/{id}",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
                     method = RequestMethod.DELETE,
-                    beanClass = SalaryHandler.class,
+                    beanClass = ShiftHandler.class,
                     beanMethod = "delete",
                     operation = @Operation(
-                            operationId = "deleteSalaryById",
-                            description = "Deletes Salary entity by given ID as path variable",
+                            operationId = "deleteShiftById",
+                            description = "Deletes Shift entity by given ID as path variable",
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
@@ -976,7 +976,7 @@ public class Router {
                                     ),
                                     @ApiResponse(
                                             responseCode = "404",
-                                            description = "Can't find Salary to delete with given ID"
+                                            description = "Can't find Shift to delete with given ID"
                                     ),
                                     @ApiResponse(
                                             responseCode = "401",
@@ -988,16 +988,16 @@ public class Router {
                                     )
                             },
                             parameters = {
-                                    @Parameter(in = ParameterIn.PATH, name = "id", description = "Salary ID")
+                                    @Parameter(in = ParameterIn.PATH, name = "id", description = "Shift ID")
                             }
                     )
             )
     })
     @Bean
-    public RouterFunction<ServerResponse> salaryRoute(SalaryHandler handler) {
+    public RouterFunction<ServerResponse> shiftRoute(ShiftHandler handler) {
         RouterFunction<ServerResponse> router = RouterFunctions
                 .route()
-                .path("/route/salary", builder -> builder
+                .path("/route/shifts", builder -> builder
                         .GET("/", accept(APPLICATION_JSON), handler::findAll)
                         .GET("", accept(APPLICATION_JSON), handler::findAll)
                         .GET("/{id}", accept(APPLICATION_JSON), handler::findById)
@@ -1341,5 +1341,4 @@ public class Router {
                 .build();
         return router;
     }
-
 }

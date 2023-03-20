@@ -51,7 +51,6 @@ public class PrivilegeHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromPublisher(createdPrivilege, PrivilegeDTO.class));
     }
-
     public Mono<ServerResponse> update(ServerRequest request) {
         String idFromDb = request.pathVariable("id");
         Mono<PrivilegeDTO> body = request.bodyToMono(PrivilegeDTO.class);

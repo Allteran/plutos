@@ -4,4 +4,4 @@
     export const STORAGE_KEY_USER_ID = 'storage_key_uSeR_iD';
     export const URL_LOGIN = 'http://localhost:8080/auth/login'
     export const URL_VALIDATE_TOKEN = 'http://localhost:8080/auth/validateToken';
-    export const URL_SHIFT_LIST_PUBLIC = 'http://localhost:8080/route/salary/search/user';
+    export const URL_SHIFT_LIST_PUBLIC = 'http://localhost:8080/route/shifts/search/user';

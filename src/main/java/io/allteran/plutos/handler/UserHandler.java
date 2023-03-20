@@ -1,5 +1,7 @@
 package io.allteran.plutos.handler;
 
+import io.allteran.plutos.domain.Role;
+import io.allteran.plutos.domain.User;
 import io.allteran.plutos.dto.UserDTO;
 import io.allteran.plutos.dto.Views;
 import io.allteran.plutos.exception.NotFoundException;
@@ -7,21 +9,28 @@ import io.allteran.plutos.service.UserService;
 import io.allteran.plutos.util.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.json.Jackson2CodecSupport;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Component
 public class UserHandler {
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserHandler(UserService userService) {
+    public UserHandler(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Mono<ServerResponse> findAll(ServerRequest request) {
