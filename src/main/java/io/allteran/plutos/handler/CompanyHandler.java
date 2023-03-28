@@ -76,4 +76,14 @@ public class CompanyHandler {
                 .body(BodyInserters.fromPublisher(deletationMono, Void.class));
     }
 
+    public Mono<ServerResponse> searchByType(ServerRequest request) {
+        String type = request.queryParam("type").orElse("");
+        Flux<CompanyDTO> searchResult = companyService.findByType(type).map(EntityMapper::convertToDTO);
+
+        return ServerResponse
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromPublisher(searchResult, CompanyDTO.class));
+    }
+
 }

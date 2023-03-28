@@ -1,25 +1,57 @@
 import {Button, Checkbox, DatePicker, Form, InputNumber, Select, Space, Typography} from "antd";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {STORAGE_KEY_TOKEN, URLS, COMPANY} from "../../util/const";
+import {validateToken} from "../../util/authUtils";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 export default function ShiftRegistration() {
+    const navigate = useNavigate();
     const [breakIn, setBreakIn] = useState(false);
     const [workedHours, setWorkedHours] = useState(0);
     const [workedMinutes, setWorkedMinutes] = useState(0);
     const [rate, setRate] = useState(0);
     const [income, setIncome] = useState(0);
-    const companyList = [
-        {
-            value: 'HOPI_ID',
-            label: 'HOOOPI',
-        },
-        {
-            value: 'ORBICO_ID',
-            label: 'ORBICO'
-        }
-    ]
+    const [companyList, setCompanyList] = useState([]);
+    const [selectedCompanyId, setSelectedCompanyId] = useState({});
+
+    // async function getProfile
+
+
+    async function getCompanyList() {
+        let token = localStorage.getItem(STORAGE_KEY_TOKEN);
+        await axios.get(URLS.COMPANIES + 'search/type', {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            },
+            params: {
+                type: COMPANY.TYPE.WAREHOUSE
+            }
+        }).then(res => {
+            res.data.map((item) => {
+                item.label = item.name;
+                item.value = item.id;
+            });
+            setCompanyList(res.data);
+        }).catch(er => {
+           console.log('getCompanyList error = ', er);
+           validateToken(token).catch(er => {
+               navigate("/login");
+           });
+        });
+    }
+
+    useEffect( ()  => {
+        getCompanyList();
+    }, []);
+
     const onBreakCheckChange = (e) => {
         setBreakIn(e.target.checked);
     };
+
+    const onCompanySelectChange = (value) => {
+        setSelectedCompanyId(value);
+    }
 
     return(
         <>
@@ -80,7 +112,10 @@ export default function ShiftRegistration() {
                     <span className="ant-form-text">{income} зл.</span>
                 </Form.Item>
                 <Form.Item name="company" label="Компанія">
-                    <Select options={companyList} placeholder="Виберіть зі списку"/>
+                    <Select onChange={onCompanySelectChange} options={companyList} placeholder="Виберіть зі списку"/>
+                </Form.Item>
+                <Form.Item label="Агенція">
+                    <span className="ant-form-text"></span>
                 </Form.Item>
                 <Form.Item label="  " colon={false}>
                     <Button type="primary" htmlType="submit">

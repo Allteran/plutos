@@ -23,6 +23,9 @@ public class CompanyService {
     public Flux<Company> findAll() {
         return repository.findAll();
     }
+    public Flux<Company> findByType(String type) {
+        return repository.findCompaniesByType(type);
+    }
 
     public Mono<Company> findById(String id) {
         return repository.findById(id);

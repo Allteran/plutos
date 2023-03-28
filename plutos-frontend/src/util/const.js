@@ -5,3 +5,14 @@
     export const URL_LOGIN = 'http://localhost:8080/auth/login'
     export const URL_VALIDATE_TOKEN = 'http://localhost:8080/auth/validateToken';
     export const URL_SHIFT_LIST_PUBLIC = 'http://localhost:8080/route/shifts/search/user';
+    export const URL_DOMAIN = 'http://localhost:8080/';
+    export const URLS = {
+        COMPANIES: URL_DOMAIN + 'route/companies/'
+    }
+
+    export const COMPANY = {
+        TYPE: {
+            AGENCY: 'AGENCY',
+            WAREHOUSE: 'WAREHOUSE'
+        }
+    }

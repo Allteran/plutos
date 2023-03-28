@@ -299,6 +299,34 @@ public class Router {
                             )
                     ),
                     @RouterOperation(
+                            path = "/route/search/type",
+                            produces = {
+                                    APPLICATION_JSON_VALUE
+                            },
+                            method = RequestMethod.GET,
+                            beanClass = CompanyHandler.class,
+                            beanMethod = "searchByType",
+                            operation = @Operation(
+                                    operationId = "searchByType",
+                                    responses = {
+                                            @ApiResponse(
+                                                    responseCode = "200",
+                                                    description = "Successful operation",
+                                                    content = @Content(schema = @Schema(
+                                                            implementation = CompanyDTO.class
+                                                    ))
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "401",
+                                                    description = "User unauthorized"
+                                            )
+                                    },
+                                    parameters = {
+                                            @Parameter(in = ParameterIn.QUERY, name = "type", description = "Company type (String)")
+                                    }
+                            )
+                    ),
+                    @RouterOperation(
                             path = "/route/companies/{id}",
                             produces = {
                                     APPLICATION_JSON_VALUE
@@ -451,6 +479,7 @@ public class Router {
                 .path("/route/companies", builder -> builder
                         .GET("", accept(APPLICATION_JSON), handler::findAll)
                         .GET("/", accept(APPLICATION_JSON), handler::findAll)
+                        .GET("/search/type", accept(APPLICATION_JSON), handler::searchByType)
                         .GET("/{id}", accept(APPLICATION_JSON), handler::findById)
                         .POST("/new", accept(APPLICATION_JSON), handler::create)
                         .PUT("/update/{id}", accept(APPLICATION_JSON), handler::update)

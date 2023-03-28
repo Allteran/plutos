@@ -17,6 +17,7 @@ public class Company {
     private String id;
     private String name;
     private String description;
+    //consider that for now it can be only two types of company: AGENCY and WAREHOUSE
     private String type;
 
 }

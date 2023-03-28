@@ -131,7 +131,6 @@ export default function ShiftList() {
             setShiftList(res.data.map(el =>({...el, key:el.id})));
             setLoading(false)
         }).catch(er => {
-            console.log('getSalaryList: error = ', er);
             validateToken(token).catch(er => {
                 navigate("/login");
             });
