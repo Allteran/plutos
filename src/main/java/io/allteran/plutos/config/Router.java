@@ -80,7 +80,7 @@ public class Router {
                             )
                     ),
                     @RouterOperation(
-                            path = "/route/countries/{id}",
+                            path = "/route/countries/get/{id}",
                             produces = {
                                     APPLICATION_JSON_VALUE
                             },
@@ -231,7 +231,7 @@ public class Router {
                 .path("/route/countries", builder -> builder
                         .GET("", accept(APPLICATION_JSON), handler::findAll)
                         .GET("/", accept(APPLICATION_JSON), handler::findAll)
-                        .GET("/{id}", accept(APPLICATION_JSON), handler::findById)
+                        .GET("/get/{id}", accept(APPLICATION_JSON), handler::findById)
                         .POST("/new", accept(APPLICATION_JSON), handler::create)
                         .PUT("/update/{id}", accept(APPLICATION_JSON), handler::update)
                         .DELETE("/delete/{id}", accept(APPLICATION_JSON), handler::delete))
@@ -327,7 +327,7 @@ public class Router {
                             )
                     ),
                     @RouterOperation(
-                            path = "/route/companies/{id}",
+                            path = "/route/companies/get/{id}",
                             produces = {
                                     APPLICATION_JSON_VALUE
                             },
@@ -480,7 +480,7 @@ public class Router {
                         .GET("", accept(APPLICATION_JSON), handler::findAll)
                         .GET("/", accept(APPLICATION_JSON), handler::findAll)
                         .GET("/search/type", accept(APPLICATION_JSON), handler::searchByType)
-                        .GET("/{id}", accept(APPLICATION_JSON), handler::findById)
+                        .GET("/get/{id}", accept(APPLICATION_JSON), handler::findById)
                         .POST("/new", accept(APPLICATION_JSON), handler::create)
                         .PUT("/update/{id}", accept(APPLICATION_JSON), handler::update)
                         .DELETE("/delete/{id}", accept(APPLICATION_JSON), handler::delete))
@@ -546,7 +546,7 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/privileges/{id}",
+                    path = "/route/privileges/get/{id}",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
@@ -697,7 +697,7 @@ public class Router {
                 .path("/route/privileges", builder -> builder
                         .GET("", accept(APPLICATION_JSON), handler::findAll)
                         .GET("/", accept(APPLICATION_JSON), handler::findAll)
-                        .GET("/{id}", accept(APPLICATION_JSON), handler::findById)
+                        .GET("/get/{id}", accept(APPLICATION_JSON), handler::findById)
                         .POST("/new", accept(APPLICATION_JSON), handler::create)
                         .PUT("/update/{id}", accept(APPLICATION_JSON), handler::update)
                         .DELETE("/delete/{id}", accept(APPLICATION_JSON), handler::delete))
@@ -764,7 +764,7 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/shifts/{id}",
+                    path = "/route/shifts/get/{id}",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
@@ -1029,7 +1029,7 @@ public class Router {
                 .path("/route/shifts", builder -> builder
                         .GET("/", accept(APPLICATION_JSON), handler::findAll)
                         .GET("", accept(APPLICATION_JSON), handler::findAll)
-                        .GET("/{id}", accept(APPLICATION_JSON), handler::findById)
+                        .GET("/get/{id}", accept(APPLICATION_JSON), handler::findById)
                         .GET("/search/user", accept(APPLICATION_JSON), handler::findByUser)
                         .GET("/search/user-date", accept(APPLICATION_JSON), handler::findByUserDate)
                         .GET("/search/user-company", accept(APPLICATION_JSON), handler::findByUserCompany)
@@ -1041,7 +1041,7 @@ public class Router {
     }
     @RouterOperations({
             @RouterOperation(
-                    path = "/route/adm/users",
+                    path = "/route/users",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
@@ -1071,7 +1071,7 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/adm/users/{id}",
+                    path = "/route/users/get/{id}",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
@@ -1108,7 +1108,7 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/adm/users/search/email",
+                    path = "/route/users/search/email",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
@@ -1145,7 +1145,7 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/adm/users/search/fname",
+                    path = "/route/users/search/fname",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
@@ -1182,7 +1182,7 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/adm/users/lname",
+                    path = "/route/users/lname",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
@@ -1219,7 +1219,7 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/adm/users/search/country",
+                    path = "/route/users/search/country",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
@@ -1256,7 +1256,7 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/adm/users/new",
+                    path = "/route/users/new",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
@@ -1295,7 +1295,7 @@ public class Router {
                     )
             ),
             @RouterOperation(
-                    path = "/route/adm/users/update",
+                    path = "/route/users/update/{id}",
                     produces = {
                             APPLICATION_JSON_VALUE
                     },
@@ -1336,16 +1336,52 @@ public class Router {
                                     ))
                             )
                     )
+            ),
+            @RouterOperation(
+                    path = "/route/profile",
+                    produces = APPLICATION_JSON_VALUE,
+                    method = RequestMethod.GET,
+                    beanClass = UserHandler.class,
+                    beanMethod = "getProfile",
+                    operation = @Operation(
+                            operationId = "getUsersProfileByToken",
+                            description = "returns Profile of User based on provided token",
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "successful operation",
+                                            content = @Content(schema = @Schema(
+                                                    implementation = UserDTO.class
+                                            ))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "User unauthorized"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "403",
+                                            description = "Forbidden: access denied due to access politic"
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "500",
+                                            description = "Internal server error, check logs"
+                                    ),
+                            },
+                            parameters = {
+                                    @Parameter(in = ParameterIn.QUERY, name = "token", description = "Token of user")
+                            }
+                    )
             )
     })
     @Bean
     public RouterFunction<ServerResponse> userRoute(UserHandler handler) {
         RouterFunction<ServerResponse> router = RouterFunctions
                 .route()
-                .path("/route/adm/users", builder -> builder
+                .path("/route/users", builder -> builder
                         .GET("/", accept(APPLICATION_JSON), handler::findAll)
                         .GET("", accept(APPLICATION_JSON), handler::findAll)
-                        .GET("/{id}", accept(APPLICATION_JSON), handler::findById)
+                        .GET("/get/{id}", accept(APPLICATION_JSON), handler::findById)
+                        .GET("/profile", accept(APPLICATION_JSON), handler::getProfile)
                         .POST("/new", accept(APPLICATION_JSON), handler::create)
                         .GET("/search/email", accept(APPLICATION_JSON), handler::findByEmail)
                         .GET("/search/fname", accept(APPLICATION_JSON), handler::findByFirstName)

@@ -1,6 +1,6 @@
 import {Button, Checkbox, DatePicker, Form, InputNumber, Select, Space, Typography} from "antd";
 import {useEffect, useState} from "react";
-import {STORAGE_KEY_TOKEN, URLS, COMPANY} from "../../util/const";
+import {COMPANY, STORAGE_KEY_TOKEN, URLS} from "../../util/const";
 import {validateToken} from "../../util/authUtils";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
@@ -34,23 +34,43 @@ export default function ShiftRegistration() {
             });
             setCompanyList(res.data);
         }).catch(er => {
-           console.log('getCompanyList error = ', er);
-           validateToken(token).catch(er => {
-               navigate("/login");
-           });
+            console.log('getCompanyList error = ', er);
+            validateToken(token).catch(er => {
+                navigate("/login");
+            });
         });
     }
 
     useEffect( ()  => {
         getCompanyList();
+        getProfile(localStorage.getItem(STORAGE_KEY_TOKEN));
     }, []);
-
+    async function getProfile(token) {
+        await axios.get(URLS.USERS.PROFILE, {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            },
+            params: {
+                token: token
+            }
+        }).then(result => {
+            let r = result.data.ratePerHour;
+            setRate(r)
+            console.log('rate = ', rate);
+        })
+            .catch(er => {
+                console.error(er);
+            })
+    }
     const onBreakCheckChange = (e) => {
         setBreakIn(e.target.checked);
     };
 
     const onCompanySelectChange = (value) => {
         setSelectedCompanyId(value);
+    }
+    const onRateChange = (value) => {
+        setRate(value);
     }
 
     return(
@@ -102,11 +122,11 @@ export default function ShiftRegistration() {
                 <Form.Item name="workedHours" label="Пропрацьовано часу">
                     <span className="ant-form-text">{workedHours} годин {workedMinutes} хвилин</span>
                 </Form.Item>
-                <Form.Item name="ratePerHour"label="Ставка" required={true}>
+                <Form.Item name="ratePerHour" label="Ставка" required={true}>
                     <InputNumber addonAfter="зл/год." style={{
                         display: 'inline-block',
                         width: '78%'
-                    }} defaultValue={rate} />
+                    }} value={rate} onChange={onRateChange}/>
                 </Form.Item>
                 <Form.Item label="Дохід">
                     <span className="ant-form-text">{income} зл.</span>

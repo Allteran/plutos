@@ -1,24 +1,22 @@
 package io.allteran.plutos.handler;
 
-import io.allteran.plutos.domain.Role;
-import io.allteran.plutos.domain.User;
+import io.allteran.plutos.config.JwtUtil;
 import io.allteran.plutos.dto.UserDTO;
 import io.allteran.plutos.dto.Views;
 import io.allteran.plutos.exception.NotFoundException;
+import io.allteran.plutos.exception.TokenException;
 import io.allteran.plutos.service.UserService;
 import io.allteran.plutos.util.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.json.Jackson2CodecSupport;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserter;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -26,11 +24,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class UserHandler {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserHandler(UserService userService, PasswordEncoder passwordEncoder) {
+    public UserHandler(UserService userService, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public Mono<ServerResponse> findAll(ServerRequest request) {
@@ -141,6 +141,25 @@ public class UserHandler {
                 .body(updatedUser, UserDTO.class);
     }
 
+    public Mono<ServerResponse> getProfile(ServerRequest request) {
+        String token = request.queryParam("token").orElse("");
+        if(!jwtUtil.validateToken(token)) {
+            return Mono.error(new TokenException("Token is wrong or expired"));
+        }
+        String email = jwtUtil.extractUsername(token);
+        Mono<UserDTO> profile = userService.findByEmail(email)
+                .flatMap(user -> {
+                    System.out.println(user.getEmail());
+                    return Mono.just(user);
+                })
+                .map(EntityMapper::convertToDTO);
+
+        return ServerResponse
+                .ok()
+                .contentType(APPLICATION_JSON)
+                .body(profile, UserDTO.class);
+    }
+
     public Mono<ServerResponse> delete(ServerRequest request) {
         String id = request.pathVariable("id");
         Mono<Void> userDeleted = userService.delete(id);
@@ -150,5 +169,4 @@ public class UserHandler {
                 .contentType(APPLICATION_JSON)
                 .body(userDeleted, Void.class);
     }
-
 }

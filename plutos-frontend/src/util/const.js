@@ -7,7 +7,11 @@
     export const URL_SHIFT_LIST_PUBLIC = 'http://localhost:8080/route/shifts/search/user';
     export const URL_DOMAIN = 'http://localhost:8080/';
     export const URLS = {
-        COMPANIES: URL_DOMAIN + 'route/companies/'
+        COMPANIES: URL_DOMAIN + 'route/companies/',
+        USERS: {
+            USERS: URL_DOMAIN + 'route/users/',
+            PROFILE: URL_DOMAIN + 'route/users/profile',
+        }
     }
 
     export const COMPANY = {
