@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.json.Jackson2CodecSupport;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserter;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
@@ -148,10 +146,6 @@ public class UserHandler {
         }
         String email = jwtUtil.extractUsername(token);
         Mono<UserDTO> profile = userService.findByEmail(email)
-                .flatMap(user -> {
-                    System.out.println(user.getEmail());
-                    return Mono.just(user);
-                })
                 .map(EntityMapper::convertToDTO);
 
         return ServerResponse

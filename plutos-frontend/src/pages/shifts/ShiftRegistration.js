@@ -1,9 +1,10 @@
-import {Button, Checkbox, DatePicker, Form, InputNumber, Select, Space, Typography} from "antd";
+import {Button, Checkbox, DatePicker, Form, InputNumber, Select, Space, Spin, Typography} from "antd";
 import {useEffect, useState} from "react";
 import {COMPANY, STORAGE_KEY_TOKEN, URLS} from "../../util/const";
 import {validateToken} from "../../util/authUtils";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import moment from "moment";
 
 export default function ShiftRegistration() {
     const navigate = useNavigate();
@@ -14,9 +15,10 @@ export default function ShiftRegistration() {
     const [income, setIncome] = useState(0);
     const [companyList, setCompanyList] = useState([]);
     const [selectedCompanyId, setSelectedCompanyId] = useState({});
+    const [loadingPage, setLoadingPage] = useState(true);
+    const [agency, setAgency] = useState({});
 
-    // async function getProfile
-
+    const [form] = Form.useForm();
 
     async function getCompanyList() {
         let token = localStorage.getItem(STORAGE_KEY_TOKEN);
@@ -40,11 +42,6 @@ export default function ShiftRegistration() {
             });
         });
     }
-
-    useEffect( ()  => {
-        getCompanyList();
-        getProfile(localStorage.getItem(STORAGE_KEY_TOKEN));
-    }, []);
     async function getProfile(token) {
         await axios.get(URLS.USERS.PROFILE, {
             headers: {
@@ -54,14 +51,34 @@ export default function ShiftRegistration() {
                 token: token
             }
         }).then(result => {
-            let r = result.data.ratePerHour;
-            setRate(r)
-            console.log('rate = ', rate);
+            let profile = result.data;
+            let r = profile.ratePerHour;
+            setRate(r);
+            getAgency(profile.employerId, token);
         })
             .catch(er => {
                 console.error(er);
             })
     }
+
+    async function getAgency(id, token) {
+        await axios.get(URLS.COMPANIES + "get/" + id, {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            }
+        }).then(result => {
+            setAgency(result.data);
+        })
+    }
+
+    useEffect( ()  => {
+        let token = localStorage.getItem(STORAGE_KEY_TOKEN);
+        getCompanyList();
+        getProfile(token).then(res => {
+            setLoadingPage(false);
+        });
+    }, []);
+
     const onBreakCheckChange = (e) => {
         setBreakIn(e.target.checked);
     };
@@ -70,39 +87,150 @@ export default function ShiftRegistration() {
         setSelectedCompanyId(value);
     }
     const onRateChange = (value) => {
-        setRate(value);
+
+    }
+
+    const onFinish = (values) => {
+        console.log('OnFinish form, values = ', values);
+    }
+
+    const calculateWorkedHours = (startDate, startTime, endDate, endTime, breakDuration) => {
+        console.log('startDateTime = ');
+        let start = new Date(startDate);
+        let end = new Date(endDate + endTime);
+        console.log('start = ', start);
+        console.log('end.mins = ', end.getMinutes());
+
+
+
+
+    }
+
+    if(loadingPage) {
+        return(
+            <>
+                <Spin tip="Завантажуємо інформацію" size="large" className="shift-registration-spin"/>
+            </>
+        )
     }
 
     return(
         <>
             <Typography.Title level={2}>Зміна: створення нового запису</Typography.Title>
             <Form
+                form={form}
+                initialValues={
+                    {
+                        ["breakDuration"]:0,
+                        ["ratePerHour"]:rate
+                    }
+                }
+
                 labelCol={{
                     span: 8,
                 }}
                 wrapperCol={{
                     span: 16,
                 }}
-                scrollToFirstError={true}
+                scrollToFirstError
                 name="shift-registration"
+                onFinish={onFinish}
                 className="shift-registration">
                 <Form.Item
                     label="Початок зміни" required={true}>
                     <Space>
-                        <Form.Item name="shiftStartDate" noStyle required={true}>
+                        <Form.Item name="shiftStartDate" noStyle rules={[
+                            {
+                                required: true,
+                                message: 'Оберіть дату початку'
+                            },
+                            {
+                                type: 'date',
+                                message: 'Оберіть дату початку'
+                            },
+                            ({getFieldValue}) => ({
+                                validator(_, value) {
+                                    let endDateTime = new Date(getFieldValue('shiftEndDate') + getFieldValue('shiftEndTime'));
+                                    let startDateTime = new Date(value + getFieldValue('shiftStartTime'));
+                                    if(endDateTime.getTime() >= startDateTime.getTime()) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject()
+                                }
+                            })
+                        ]}>
                             <DatePicker picker="date" placeholder="Оберіть дату"/>
                         </Form.Item>
-                        <Form.Item name="shiftStartTime" noStyle required={true}>
+                        <Form.Item name="shiftStartTime" noStyle rules={[
+                            {
+                                required: true,
+                                message: 'Оберіть дату початку'
+                            },
+                            {
+                                type: 'date',
+                                message: 'Оберіть дату початку'
+                            },
+                            ({getFieldValue}) => ({
+                                validator(_, value) {
+                                    let endDateTime = new Date(getFieldValue('shiftEndDate') + getFieldValue('shiftEndTime'));
+                                    let startDateTime = new Date(getFieldValue('shiftStartDate') + value);
+                                    if(endDateTime.getTime() >= startDateTime.getTime()) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject()
+                                }
+                            })
+                        ]}>
                             <DatePicker picker="time" style={{width: "70%%"}} placeholder="Оберіть час"/>
                         </Form.Item>
                     </Space>
                 </Form.Item>
                 <Form.Item label="Кінець зміни" required={true}>
                     <Space >
-                        <Form.Item name="shiftEndDate" noStyle required={true}>
+                        <Form.Item name="shiftEndDate" noStyle required={true} rules={[
+                            {
+                                required: true,
+                                message: 'Оберіть дату початку'
+                            },
+                            {
+                                type: 'date',
+                                message: 'Оберіть дату початку'
+                            },
+                            ({getFieldValue}) => ({
+                                validator(_, value) {
+                                    let endDateTime = new Date(value + getFieldValue('shiftEndTime'));
+                                    let startDateTime = new Date(getFieldValue('shiftStartDate') + getFieldValue('shiftStartTime'));
+                                    if(endDateTime.getTime() >= startDateTime.getTime()) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject()
+                                }
+                            })
+                        ]}>
                             <DatePicker picker="date" style={{width: "70%%"}} placeholder="Оберіть дату"/>
                         </Form.Item>
-                        <Form.Item name="shiftEndTime" noStyle required={true}>
+                        <Form.Item name="shiftEndTime" noStyle required={true} rules={[
+                            {
+                                required: true,
+                                message: 'Оберіть дату початку'
+                            },
+                            {
+                                type: 'date',
+                                message: 'Оберіть дату початку'
+                            },
+                            ({getFieldValue}) => ({
+                                validator(_, value) {
+                                    let endDateTime = new Date(getFieldValue('shiftEndDate') + value);
+                                    let startDateTime = new Date(getFieldValue('shiftStartDate') + getFieldValue('shiftStartTime'));
+                                    if(endDateTime.getTime() >= startDateTime.getTime()) {
+                                        calculateWorkedHours(getFieldValue('shiftStartDate'), getFieldValue('shiftStartTime'), getFieldValue('shiftEndDate'),
+                                            value, getFieldValue('breakDuration'));
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(new Error('Час та дата початку повинні бути до часу та дати кінця'));
+                                }
+                            })
+                        ]}>
                             <DatePicker picker="time" style={{width: "70%%"}} placeholder="Оберіть час"/>
                         </Form.Item>
                     </Space>
@@ -112,10 +240,30 @@ export default function ShiftRegistration() {
                         <Form.Item noStyle>
                             <Checkbox onChange={onBreakCheckChange} style={{width: "50%%"}} checked={breakIn}>Вираховується</Checkbox>
                         </Form.Item>
-                        <Form.Item name="breakDuration" noStyle required={true}>
+                        <Form.Item name="breakDuration" noStyle rules={[
+                            {
+                                required: breakIn,
+                                message: 'Вкажіть час перерви (в хв)'
+                            },
+                            {
+                                type: 'number',
+                                message: 'Вкажіть час перерви (в хв)'
+                            },
+                            () => ({
+                                validator(_, value) {
+                                    if(breakIn) {
+                                        if(value <= 0) {
+                                            return Promise.reject(new Error('Вкажіть корректний час перерви'));
+                                        }
+                                    }
+                                    return Promise.resolve();
+
+                                }
+                            })
+                        ]}>
                             <InputNumber addonAfter="хв" style={{
                                 width: 'calc(75% - 9px)'
-                            }} defaultValue="0" disabled={!breakIn}/>
+                            }} disabled={!breakIn}/>
                         </Form.Item>
                     </Space>
                 </Form.Item>
@@ -126,7 +274,7 @@ export default function ShiftRegistration() {
                     <InputNumber addonAfter="зл/год." style={{
                         display: 'inline-block',
                         width: '78%'
-                    }} value={rate} onChange={onRateChange}/>
+                    }} inputMode="decimal"/>
                 </Form.Item>
                 <Form.Item label="Дохід">
                     <span className="ant-form-text">{income} зл.</span>
@@ -135,7 +283,7 @@ export default function ShiftRegistration() {
                     <Select onChange={onCompanySelectChange} options={companyList} placeholder="Виберіть зі списку"/>
                 </Form.Item>
                 <Form.Item label="Агенція">
-                    <span className="ant-form-text"></span>
+                    <span className="ant-form-text">{agency.name}</span>
                 </Form.Item>
                 <Form.Item label="  " colon={false}>
                     <Button type="primary" htmlType="submit">

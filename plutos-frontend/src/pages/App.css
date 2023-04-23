@@ -47,3 +47,8 @@
 .shift-registration {
     max-width: 600px;
 }
+
+.shift-registration-spin {
+    position: absolute;
+    top: 50%; left: 45%;
+}
