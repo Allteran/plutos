@@ -81,29 +81,62 @@ export default function ShiftRegistration() {
 
     const onBreakCheckChange = (e) => {
         setBreakIn(e.target.checked);
+        if(!e.target.checked) {
+            form.setFieldValue("breakDuration", 0);
+        }
+        calculateWorkedHours(form.getFieldValue("shiftStartDate"), form.getFieldValue("shiftStartTime"), form.getFieldValue("shiftEndDate"),
+            form.getFieldValue("shiftEndTime"), form.getFieldValue("breakDuration"));
     };
+
+    const onBreakDurationChange = (value) => {
+        calculateWorkedHours(form.getFieldValue("shiftStartDate"), form.getFieldValue("shiftStartTime"), form.getFieldValue("shiftEndDate"),
+            form.getFieldValue("shiftEndTime"), value);
+    }
 
     const onCompanySelectChange = (value) => {
         setSelectedCompanyId(value);
     }
     const onRateChange = (value) => {
-
+        if(value === null || value <= 0) {
+            value = 0;
+        }
+        setRate(value);
+        calculateIncome(value, workedHours, workedMinutes);
     }
-
+    
     const onFinish = (values) => {
-        console.log('OnFinish form, values = ', values);
+        calculateIncome(rate,  workedHours, workedMinutes);
+
     }
 
     const calculateWorkedHours = (startDate, startTime, endDate, endTime, breakDuration) => {
-        console.log('startDateTime = ');
+        let startTimeDate = new Date(startTime);
         let start = new Date(startDate);
-        let end = new Date(endDate + endTime);
-        console.log('start = ', start);
-        console.log('end.mins = ', end.getMinutes());
+        start.setHours(startTimeDate.getHours());
+        start.setMinutes(startTimeDate.getMinutes());
+        start.setSeconds(0);
+
+        let endTimeDate = new Date(endTime);
+        let end = new Date(endDate);
+        end.setHours(endTimeDate.getHours());
+        end.setMinutes(endTimeDate.getMinutes());
+        end.setSeconds(0);
+
+        let totalMinutes = Math.round((end.getTime() - start.getTime() - breakDuration * 60000) / 60000);
+        console.log('totalMinutes = ', totalMinutes);
+        let hours = Math.floor(totalMinutes / 60);
+        let minutes = totalMinutes % 60;
+
+        setWorkedHours(hours);
+        setWorkedMinutes(minutes);
+
+        calculateIncome(rate, workedHours, workedMinutes);
+
+    }
 
 
-
-
+    const calculateIncome = (rate, workedHours, workedMinutes) => {
+        setIncome(rate * (workedHours + workedMinutes/60))
     }
 
     if(loadingPage) {
@@ -249,10 +282,12 @@ export default function ShiftRegistration() {
                                 type: 'number',
                                 message: 'Вкажіть час перерви (в хв)'
                             },
-                            () => ({
+                            ({getFieldValue}) => ({
                                 validator(_, value) {
                                     if(breakIn) {
                                         if(value <= 0) {
+                                            calculateWorkedHours(getFieldValue('shiftStartDate'), getFieldValue('shiftStartTime'),
+                                                getFieldValue('shiftEndDate'), getFieldValue('shiftEndTime'), value);
                                             return Promise.reject(new Error('Вкажіть корректний час перерви'));
                                         }
                                     }
@@ -263,7 +298,8 @@ export default function ShiftRegistration() {
                         ]}>
                             <InputNumber addonAfter="хв" style={{
                                 width: 'calc(75% - 9px)'
-                            }} disabled={!breakIn}/>
+                            }} disabled={!breakIn}
+                            onChange={onBreakDurationChange}/>
                         </Form.Item>
                     </Space>
                 </Form.Item>
@@ -274,7 +310,7 @@ export default function ShiftRegistration() {
                     <InputNumber addonAfter="зл/год." style={{
                         display: 'inline-block',
                         width: '78%'
-                    }} inputMode="decimal"/>
+                    }} inputMode="decimal" onChange={onRateChange}/>
                 </Form.Item>
                 <Form.Item label="Дохід">
                     <span className="ant-form-text">{income} зл.</span>
