@@ -11,6 +11,9 @@
         USERS: {
             USERS: URL_DOMAIN + 'route/users/',
             PROFILE: URL_DOMAIN + 'route/users/profile',
+        },
+        SHIFTS: {
+            SHIFTS: URL_DOMAIN + 'route/shifts/',
         }
     }
 

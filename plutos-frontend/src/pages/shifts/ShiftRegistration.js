@@ -4,19 +4,19 @@ import {COMPANY, STORAGE_KEY_TOKEN, URLS} from "../../util/const";
 import {validateToken} from "../../util/authUtils";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import moment from "moment";
 
 export default function ShiftRegistration() {
     const navigate = useNavigate();
     const [breakIn, setBreakIn] = useState(false);
     const [workedHours, setWorkedHours] = useState(0);
     const [workedMinutes, setWorkedMinutes] = useState(0);
-    const [rate, setRate] = useState(0);
+    const [rate, setRate] = useState(0.0);
     const [income, setIncome] = useState(0);
     const [companyList, setCompanyList] = useState([]);
     const [selectedCompanyId, setSelectedCompanyId] = useState({});
     const [loadingPage, setLoadingPage] = useState(true);
     const [agency, setAgency] = useState({});
+    const [userId, setUserId] = useState('');
 
     const [form] = Form.useForm();
 
@@ -36,10 +36,9 @@ export default function ShiftRegistration() {
             });
             setCompanyList(res.data);
         }).catch(er => {
-            console.log('getCompanyList error = ', er);
             validateToken(token).catch(er => {
                 navigate("/login");
-            });
+            })
         });
     }
     async function getProfile(token) {
@@ -53,12 +52,14 @@ export default function ShiftRegistration() {
         }).then(result => {
             let profile = result.data;
             let r = profile.ratePerHour;
+            setUserId(profile.id);
             setRate(r);
             getAgency(profile.employerId, token);
-        })
-            .catch(er => {
-                console.error(er);
+        }).catch(er => {
+            validateToken(token).catch(er => {
+                navigate("/login");
             })
+        });
     }
 
     async function getAgency(id, token) {
@@ -68,6 +69,10 @@ export default function ShiftRegistration() {
             }
         }).then(result => {
             setAgency(result.data);
+        }).catch(er => {
+            validateToken(token).catch(er => {
+                navigate("/login");
+            })
         })
     }
 
@@ -103,10 +108,67 @@ export default function ShiftRegistration() {
         setRate(value);
         calculateIncome(value, workedHours, workedMinutes);
     }
-    
     const onFinish = (values) => {
         calculateIncome(rate,  workedHours, workedMinutes);
+        calculateWorkedHours(values.shiftStartDate, values.shiftStartTime, values.shiftEndDate, values.shiftEndTime, values.breakDuration);
+        let shift ={};
+        shift.userId = userId;
+        if(values.shiftStartDate && values.shiftStartTime) {
+            let vStart = dateTimeConcat(values.shiftStartDate, values.shiftStartTime);
+            let start = new Date();
+            start.setTime(vStart.getTime() - vStart.getTimezoneOffset() * 60 * 1000);
+            shift.shiftStart = start.toISOString();
+        }
+        if(values.shiftEndDate && values.shiftEndTime) {
+            let vEnd = dateTimeConcat(values.shiftEndDate, values.shiftEndTime);
+            let end = new Date();
+            end.setTime(vEnd.getTime() - vEnd.getTimezoneOffset() * 60 * 1000);
+            shift.shiftEnd = end.toISOString();
+        }
+        if(breakIn) {
+            shift.breakDuration = values.breakDuration;
+        } else {
+            shift.breakDuration = 0;
+        }
+        shift.workedHours = ((workedHours * 60) + workedMinutes) / 60;
+        if(rate) {
+            shift.ratePerHour = rate;
+        }
+        if(income) {
+            shift.income = income;
+        }
+        if(selectedCompanyId) {
+            shift.companyId = selectedCompanyId;
+        }
+        createShift(shift);
+        // console.log('shift created on frontend, shift = ', shift);
+        //TODO: check time convert, cuz its broken
 
+    }
+
+    async function createShift(shift) {
+        let token = localStorage.getItem(STORAGE_KEY_TOKEN);
+        await axios.post(URLS.SHIFTS.SHIFTS + 'new', shift, {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            },
+        }).then(result => {
+            navigate("/shifts");
+        }).catch(er => {
+            validateToken(token).catch(er => {
+                navigate("/login");
+            })
+        })
+    }
+
+
+    function dateTimeConcat(date, time) {
+        let d = new Date(date);
+        let t = new Date(time);
+        d.setHours(t.getHours());
+        d.setMinutes(t.getMinutes());
+        d.setSeconds(0);
+        return d;
     }
 
     const calculateWorkedHours = (startDate, startTime, endDate, endTime, breakDuration) => {
@@ -123,7 +185,6 @@ export default function ShiftRegistration() {
         end.setSeconds(0);
 
         let totalMinutes = Math.round((end.getTime() - start.getTime() - breakDuration * 60000) / 60000);
-        console.log('totalMinutes = ', totalMinutes);
         let hours = Math.floor(totalMinutes / 60);
         let minutes = totalMinutes % 60;
 
@@ -299,7 +360,7 @@ export default function ShiftRegistration() {
                             <InputNumber addonAfter="хв" style={{
                                 width: 'calc(75% - 9px)'
                             }} disabled={!breakIn}
-                            onChange={onBreakDurationChange}/>
+                                         onChange={onBreakDurationChange}/>
                         </Form.Item>
                     </Space>
                 </Form.Item>
@@ -315,7 +376,12 @@ export default function ShiftRegistration() {
                 <Form.Item label="Дохід">
                     <span className="ant-form-text">{income} зл.</span>
                 </Form.Item>
-                <Form.Item name="company" label="Компанія">
+                <Form.Item name="company" label="Компанія" rules={[
+                    {
+                        required: true,
+                        message: 'Вкажіть компанію'
+                    }
+                ]}>
                     <Select onChange={onCompanySelectChange} options={companyList} placeholder="Виберіть зі списку"/>
                 </Form.Item>
                 <Form.Item label="Агенція">

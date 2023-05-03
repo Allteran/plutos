@@ -81,7 +81,8 @@ public class ShiftHandler {
 
     public Mono<ServerResponse> create(ServerRequest request) {
         Mono<ShiftDTO> body = request.bodyToMono(ShiftDTO.class);
-        Mono<ShiftDTO> createdShiftDTO = shiftService.create(body.map(EntityMapper::convertToEntity))
+        Mono<ShiftDTO> createdShiftDTO = shiftService.create(
+                        body.map(EntityMapper::convertToEntity))
                 .map(EntityMapper::convertToDTO);
         return ServerResponse
                 .ok()
